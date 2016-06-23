@@ -1,0 +1,24 @@
+{
+  "name": "tuitiontool",
+  "version": "1.0.0",
+  "description": "a handy tool for reading and analyzing jewish school tuition",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeffkiderman/tuitiontool.git"
+  },
+  "keywords": [
+    "yeshiva",
+    "tuition"
+  ],
+  "author": "miki and jeffy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeffkiderman/tuitiontool/issues"
+  },
+  "homepage": "https://github.com/jeffkiderman/tuitiontool#readme"
+}

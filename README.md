@@ -1,2 +1,2 @@
 # tuitiontool
-## find something to put here
+To run: `npm start`
