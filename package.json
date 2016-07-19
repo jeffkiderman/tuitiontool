@@ -23,8 +23,13 @@
   },
   "homepage": "https://github.com/jeffkiderman/tuitiontool#readme",
   "dependencies": {
+    "async": "^2.0.0",
     "express": "^4.14.0",
-    "express-handlebars": "^3.0.0"
+    "express-handlebars": "^3.0.0",
+    "google-auth-library": "^0.9.8",
+    "googleapis": "^11.0.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
   },
   "devDependencies": {
     "flow-bin": "^0.27.0"
