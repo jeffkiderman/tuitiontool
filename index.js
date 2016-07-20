@@ -12,8 +12,8 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 // localhost:3000
 const port = 3000;
-
 const app = express();
+
 // guessing this registers the template engine with the webserver
 // main has the entire http response
 app.engine('.hbs', exphbs({
@@ -38,6 +38,8 @@ app.get('/tool', (request, response) => {
   SheetsAuth.callWithAuth(
       SheetsQuery.listSchoolsCurr((x) => response.render('home', { name: x})));
   // home.hbs is a template with a name variable that needs assignment
+    
+    console.log(SheetsQuery.ssdata);
 });
 
 app.listen(port, (err) => {

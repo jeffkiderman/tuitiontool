@@ -1,3 +1,30 @@
 <!-- This is the template that will be inserted into
 the body section of main.hbs -->
-<h2>Hello {{name}}<h2>
+<table>
+    <tr>
+        <th>School Name</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Zip</th>
+    </tr>
+    {{#each name}}
+    <tr>
+        {{#each this}}
+            <td>{{this}}</td>
+        {{/each}}
+    </tr>
+    {{/each}}
+</table>
+<br>
+<br>
+
+<form id="schoollist">
+</form>
+<h2>Select a School from the Menu Below</h2>
+<select name="schoolname" form="schoollist">
+    <option selected disabled>Choose School</option>
+    {{#each name}}
+        <option value="{{this.[0]}}">{{this.[0]}}</option>
+    {{/each}}
+</select>
