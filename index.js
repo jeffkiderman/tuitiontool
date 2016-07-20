@@ -2,7 +2,6 @@
 
 // index.js
 // @flow
-require('./app/index');
 const SheetsAuth = require('./app/SheetsAuth');
 const SheetsQuery = require('./app/SheetsQuery')
 const async = require('async');

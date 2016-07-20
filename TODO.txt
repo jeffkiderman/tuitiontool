@@ -2,3 +2,8 @@
 - fix the way we use our auth to call Sheets
 - Sync sheets to our DB so that we dont' have to fetch
   from spreadsheets on every request.
+
+
+Things to look into:
+- google api - is cellRangeRequest the best thing to use
+- template for output for printing range queries
