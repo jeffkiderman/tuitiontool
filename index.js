@@ -31,6 +31,11 @@ app.get('/sourcedata',(request,response) => {
       SheetsQuery.listSchoolsCurr((x) => response.send(x)));
 });
 
+//Serves the javascript file with queries for dataset
+app.get('/pagescripts.js',(request,response) => {
+    response.sendFile(path.join(__dirname + '/queries.js'));
+});
+
 app.listen(port, (err) => {
   if (err) {
     return console.log('something bad happened', err)

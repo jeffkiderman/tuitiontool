@@ -9,10 +9,10 @@ function loadData(){
                             createMenu();
                          });
     req.send(null);
-}
-
-function getData(){
-    return data;
+    
+    var req2 = new XMLHttpRequest();
+    req2.open("GET","http://localhost:3000/queries", true);
+    req2.send(null);
 }
 
 //compiles templates
