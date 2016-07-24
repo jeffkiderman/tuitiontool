@@ -21,7 +21,7 @@
         <h2>Select a School from the Menu Below</h2>
         <select name="schoolname" form="schoollist">
             <option selected disabled>Choose School</option>
-            {{#each data}}
+            {{#each dataset}}
                 <option value="{{this.[0]}}">{{this.[0]}}</option>
             {{/each}}
         </select>

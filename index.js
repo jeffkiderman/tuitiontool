@@ -15,35 +15,6 @@ const port = 3000;
 const app = express();
 var datafromss;
 
-// guessing this registers the template engine with the webserver
-// main has the entire http response
-
-/*app.engine('.hbs', exphbs({
-  defaultLayout: 'main',
-  extname: '.hbs',
-  layoutsDir: path.join(__dirname, 'views/layouts'),
-}));
-// dunno
-app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, 'views'));
-
-// webserver responds to root requests (localhost:3000)
-app.get('/', (request, response) => {
-  // home.hbs is a template with a name variable that needs assignment
-  response.render('home', {
-    name: 'John'
-  })
-});
-
-app.get('/tool', (request, response) => {
-  SheetsAuth.callWithAuth(
-      SheetsQuery.listSchoolsCurr((x) => response.render('home', { name: x})));
-  // home.hbs is a template with a name variable that needs assignment
-    
-    console.log(SheetsQuery.ssdata);
-});
-*/
-
 //Serves index.html, while also obtaining authorization/data from Google spreadsheets for server
 app.get('/', (request, response) => {
   response.sendFile(path.join(__dirname + '/index.html'));                

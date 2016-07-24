@@ -9,7 +9,7 @@ function listSchoolsCurr(responseCallback) {
 		const cellRangeRequest = {
       auth: auth,
     	spreadsheetId: '1VopOgIvIsop2pn99j_OQ79XsMN71pOW2lcVTqDJicWY',
-    	range: 'Complete List!A2:E2',
+    	range: 'Complete List!A2:E20',
 		};
     sheets.spreadsheets.values.get(cellRangeRequest, function(err, response) {
       if (err) {
@@ -20,19 +20,10 @@ function listSchoolsCurr(responseCallback) {
     
     if (rows.length == 0) {
     		console.log('No data found.');
-      } else {
-    		/* this is for debugging
-            console.log('Received Schools:');
-    		for (var i = 0; i < rows.length; i++) {
-        	var row = rows[i];;
-        	// Print column A from this row
-        	console.log(row[0]);
-        }*/
-     
-    //sends "rows" (all the data from the spreadsheet) to variable that can be exported      
-    ssdata=rows;
-    //console.log(ssdata);
-    responseCallback(rows);
+        } else {
+        //sends "rows" (all the data from the spreadsheet) to variable that can be exported      
+        ssdata=rows;
+        responseCallback(rows);
         }
     });
   };
