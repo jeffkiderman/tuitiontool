@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tuition Tool Test</title>
+  <meta name="description" content="Test home page for tuition tool">
+  <meta name="M&J" content="Tuition Tool">
+
+<!-- src will have to be changed when we move to the web, but this was easiest for now -->
+    <script type="text/javascript" src="http://localhost:3000/pagescripts.js"></script>
+<!-- handelbars -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+</head>
+
+<body onload="loadData()">
+    <h1>Page loaded!</h1>
+    <button onclick="createMenu()">Click Here For Data</button>
+    
+    <script id="school-selection-form" type="text/x-handlebars-template" >
+        <form id="schoollist"></form>
+        <h2>Select a School from the Menu Below</h2>
+        <select name="schoolname" form="schoollist">
+            <option selected disabled>Choose School</option>
+            {{#each data}}
+                <option value="{{this.[0]}}">{{this.[0]}}</option>
+            {{/each}}
+        </select>
+    </script>
+    
+    <div id="school-dropdown"></div>
+</body>
+</html>
