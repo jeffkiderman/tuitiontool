@@ -11,14 +11,25 @@ const express = require('express');
 const port = 3000;
 const app = express();
 var datafromss;
-
+var token; // should probably let SheetsAuth do the caching, but OK for now
 // serve static resources
 app.use(express.static(path.join(__dirname + '/app/public')));
 
 //Serves the data
 app.get('/sourcedata', (request,response) => {
-  SheetsAuth.callWithAuth(
-    SheetsQuery.listSchoolsCurr((x) => response.send(x)));
+  // we already looked up our auth tokens
+  if (token) {
+    SheetsQuery.listSchoolsCurr(token)
+      .then((payload) => response.send(payload));
+  } else {
+    // fetch our auth token (from disk or google)
+    SheetsAuth.getAuthToken()
+      .then((newToken) => {
+        token = newToken;
+        return SheetsQuery.listSchoolsCurr(token);
+      })
+      .then((payload) => response.send(payload));
+  }
 });
 
 //Serves the javascript file with queries for dataset

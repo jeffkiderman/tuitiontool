@@ -1,6 +1,8 @@
 'use strict';
 
 var fs = require('fs');
+var denodeify = require('denodeify');
+var readFile = denodeify(fs.readFile);
 var readline = require('readline');
 var googleAuth = require('google-auth-library');
 
@@ -13,20 +15,13 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
      process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-tuition-tool-credential.json';
 
-function callWithAuth(queryFn) {
+function getAuthToken() {
   // Load client secrets from a local file.
-  fs.readFile(
-    '../tuitiontool-secrets/client_secret.json',
-    function processClientSecrets(err, content) {
-      if (err) {
-        console.log('Error loading client secret file: ' + err);
-        return;
-      }
-      // Authorize a client with the loaded credentials,
-      // then call the query function
-      authorize(JSON.parse(content), queryFn);
-    });
+  return readFile('../tuitiontool-secrets/client_secret.json')
+    // Authorize a client with the loaded credentials,
+    .then((content) => authorize(JSON.parse(content)));
 }
+
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -34,23 +29,21 @@ function callWithAuth(queryFn) {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, queryFn) {
-    var clientSecret = credentials.installed.client_secret;
-    var clientId = credentials.installed.client_id;
-    var redirectUrl = credentials.installed.redirect_uris[0];
-    var auth = new googleAuth();
-    var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+function authorize(credentials) {
+  var clientSecret = credentials.installed.client_secret;
+  var clientId = credentials.installed.client_id;
+  var redirectUrl = credentials.installed.redirect_uris[0];
+  var auth = new googleAuth();
+  var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
-    // Check if we have previously stored a token.
-    fs.readFile(TOKEN_PATH, function(err, token) {
-      if (err) {
-        getNewToken(oauth2Client);
-      } else {
-        oauth2Client.credentials = JSON.parse(token);
-        queryFn(oauth2Client);
-      }
-  });
-}
+  // Check if we have previously stored a token.
+  return readFile(TOKEN_PATH)
+    .then((token) => {
+      oauth2Client.credentials = JSON.parse(token);
+      return oauth2Client;
+    })
+    .catch((err) => getNewToken(oauth2Client));
+};
 
 /**
  * Get and store new token after prompting for user authorization, and then
@@ -101,7 +94,7 @@ function storeToken(token) {
 }
 
 const SheetsAuth = {
-  callWithAuth: callWithAuth,
+  getAuthToken: getAuthToken,
 };
 
 module.exports = SheetsAuth;

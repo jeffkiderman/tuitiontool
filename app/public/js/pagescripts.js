@@ -4,10 +4,13 @@ var data;
 function loadData(){
     var req = new XMLHttpRequest();
     req.open("GET", "http://localhost:3000/sourcedata", true);
-    req.addEventListener("load",function(){
-                            data = JSON.parse(req.responseText);
-                            createMenu();
-                         });
+    req.addEventListener(
+      "load",
+      function() {
+        data = JSON.parse(req.responseText);
+        createMenu();
+      }
+    );
     req.send(null);
     
     var req2 = new XMLHttpRequest();
