@@ -12,7 +12,6 @@ var SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
      process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-tuition-tool-credential.json';
-console.log(`Path to save token: ${TOKEN_PATH}`);
 
 function callWithAuth(queryFn) {
   // Load client secrets from a local file.
