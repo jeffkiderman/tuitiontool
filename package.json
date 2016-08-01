@@ -28,6 +28,7 @@
     "express-handlebars": "^3.0.0",
     "google-auth-library": "^0.9.8",
     "googleapis": "^11.0.0",
+    "promise-denodeify": "^1.2.2",
     "react": "^15.1.0",
     "react-dom": "^15.1.0"
   },

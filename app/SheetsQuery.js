@@ -8,7 +8,7 @@ function listSchoolsCurr(auth) {
   const cellRangeRequest = {
     auth: auth,
     spreadsheetId: '1VopOgIvIsop2pn99j_OQ79XsMN71pOW2lcVTqDJicWY',
-    range: 'Complete List!A2:E20',
+    range: 'Complete List!A3:DE25',
   };
   return new Promise ((resolve, reject) => {
     sheets.spreadsheets.values.get(cellRangeRequest, function(err, response) {

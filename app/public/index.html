@@ -18,14 +18,16 @@
     <script id="school-selection-form" type="text/x-handlebars-template" >
         <form id="schoollist"></form>
         <h2>Select a School from the Menu Below</h2>
-        <select name="schoolname" form="schoollist">
+        <select name="schoolname" form="schoollist" onchange="createSchoolObj(value)">
             <option selected disabled>Choose School</option>
             {{#each dataset}}
-                <option value="{{this.[0]}}">{{this.[0]}}</option>
+                <option value="{{@index}}">{{this.[0]}}</option>
             {{/each}}
         </select>
     </script>
 
     <div id="school-dropdown"></div>
+    <div id="print-tuition">
+    </div>
 </body>
 </html>
