@@ -7,18 +7,18 @@
   <meta name="M&J" content="Tuition Tool">
 
 <!-- src will have to be changed when we move to the web, but this was easiest for now -->
-    <script type="text/javascript" src="js/pagescripts.js"></script>
+    <script type="text/javascript" src="js/pagescripts2.js"></script>
 <!-- handelbars -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
 </head>
 
-<body onload="loadData()">
+<body>
     <h1>Welcome!</h1>
 
     <script id="school-selection-form" type="text/x-handlebars-template" >
         <form id="schoollist"></form>
         <h2>Select a School from the Menu Below</h2>
-        <select name="schoolname" form="schoollist" onchange="createSchoolObj(value)">
+        <select name="schoolname" form="schoollist" id="school-selector">
             <option selected disabled>Choose School</option>
             {{#each dataset}}
                 <option value="{{@index}}">{{this.[0]}}</option>
@@ -29,5 +29,8 @@
     <div id="school-dropdown"></div>
     <div id="print-tuition">
     </div>
+
+
+    <div id="reactex">
 </body>
 </html>

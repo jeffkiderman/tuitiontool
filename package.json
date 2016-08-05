@@ -24,15 +24,24 @@
   "homepage": "https://github.com/jeffkiderman/tuitiontool#readme",
   "dependencies": {
     "async": "^2.0.0",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "denodeify": "^1.2.1",
+    "domready": "^1.0.8",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "google-auth-library": "^0.9.8",
     "googleapis": "^11.0.0",
     "promise-denodeify": "^1.2.2",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0"
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0"
   },
   "devDependencies": {
     "flow-bin": "^0.27.0"
+  },
+  "babel": {
+    "presets": [
+      "react"
+    ]
   }
 }

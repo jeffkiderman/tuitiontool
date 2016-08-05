@@ -1,35 +1,46 @@
 'use strict';
 
+const React = require('react');
+const ReactDOM = require('react-dom');
+const TuitionScoreCard = require('./TuitionScoreCard.react');
+
+const domready = require('domready');
 var data;
 
 //Request data from server
-function loadData(){
+const RENAMEME = {
+  loadData: function() {
     var req = new XMLHttpRequest();
     req.open("GET", "http://localhost:3000/sourcedata", true);
     req.addEventListener(
       "load",
       function() {
         data = JSON.parse(req.responseText);
-        createMenu();
+        RENAMEME.createMenu();
       }
     );
     req.send(null);
-}
+  },
 
-//compiles templates
-function createMenu() {
-  // Grab the template script
+  //compiles templates
+  createMenu: function() {
+    // Grab the template script
     var theTemplateScript = document.getElementById("school-selection-form").innerHTML;
-  // Compile the template
-  var theTemplate = Handlebars.compile(theTemplateScript);
-  // Pass our data to the template
-  var theCompiledHtml = theTemplate({dataset:data});
-  // Add the compiled html to the page
-  document.getElementById("school-dropdown").innerHTML=theCompiledHtml;
-};
+    // Compile the template
+    var theTemplate = Handlebars.compile(theTemplateScript);
+    // Pass our data to the template
+    var theCompiledHtml = theTemplate({dataset:data});
+    // Add the compiled html to the page
+    document.getElementById("school-dropdown").innerHTML=theCompiledHtml;
 
-//Creates an object representing the information of the school in the spreadsheet at row "num"
-function createSchoolObj(num){
+    const selector = document.getElementById('school-selector');
+    console.log(selector);
+    selector.addEventListener('change', () => RENAMEME.createSchoolObj(selector.value));
+  },
+
+  //Creates an object representing the information of the school in the spreadsheet at row "num"
+  createSchoolObj: function(num) {
+    console.log(arguments);
     var d = data[num];
     console.log(d);
     var school = {
@@ -40,10 +51,10 @@ function createSchoolObj(num){
         zip: d[4],
         tuitionSaved: d[36]
     };
-    
+
     //Calculates total per-family costs for the school
     school.perFamily = (~~d[88])+(~~d[91])+(~~d[92])+(~~d[93])+(~~d[94]);
-    
+
     //Calculates total per-child costs based on array of children passed in as parameter
     school.perChild = function(children){
         var perStudent = [];
@@ -59,7 +70,7 @@ function createSchoolObj(num){
         }
         return perStudent;
     };
-    
+
     school.registration = function(returning,children){
         if(returning){
             return (~~d[77])*children.length + (~~d[90]);
@@ -68,37 +79,45 @@ function createSchoolObj(num){
             return (~~d[76])*children.length + (~~d[89]);
         }
     };
-    document.getElementById("print-tuition").innerHTML="<h2>"+calculateTuition(school,createFamilyObj())+"</h2>";
-    //console.log(calculateTuition(school,createFamilyObj())); 
-};
+    document.getElementById("print-tuition").innerHTML="<h2>"+RENAMEME.calculateTuition(school, RENAMEME.createFamilyObj())+"</h2>";
+    //console.log(calculateTuition(school,createFamilyObj()));
+  },
 
 //Creates object representing a family, with array of children
-function createFamilyObj(){
-    var family = {
-        name: "Friedmann",
-        returning:false
-    };
-    family.kids = [
-        {
-            grade:0,
-            female:false
-        },
-        {
-            grade:3,
-            female:true
-        },
-        {
-            grade:5,
-            female:true
-        }
-    ];
-    return family;
+  createFamilyObj: function() {
+      var family = {
+          name: "Friedmann",
+          returning:false
+      };
+      family.kids = [
+          {
+              grade:0,
+              female:false
+          },
+          {
+              grade:3,
+              female:true
+          },
+          {
+              grade:5,
+              female:true
+          }
+      ];
+      return family;
+  },
+
+  //Calculates total tuition bill for a given family and school
+  calculateTuition: function(sch, fam) {
+      if(sch.tuitionSaved == undefined){
+          return "Tuition information not available for this school";
+      }
+      return "$"+(sch.perChild(fam.kids).reduce(function(a,b){return a+b;},0) + sch.perFamily + sch.registration(fam.returning,fam.kids)).toLocaleString();
+  }
 };
 
-//Calculates total tuition bill for a given family and school
-function calculateTuition(sch, fam){
-    if(sch.tuitionSaved == undefined){
-        return "Tuition information not available for this school";
-    }
-    return "$"+(sch.perChild(fam.kids).reduce(function(a,b){return a+b;},0) + sch.perFamily + sch.registration(fam.returning,fam.kids)).toLocaleString();
-};
+domready(function () {
+  RENAMEME.loadData();
+  ReactDOM.render(<TuitionScoreCard />, document.getElementById('reactex'));
+})
+
+module.exports = RENAMEME;
