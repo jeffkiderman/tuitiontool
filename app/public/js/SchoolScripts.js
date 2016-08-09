@@ -1,14 +1,10 @@
 'use strict';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const TuitionScoreCard = require('./TuitionScoreCard.react');
-
-const domready = require('domready');
+const Handlebars = require('handlebars');
 var data;
 
 //Request data from server
-const RENAMEME = {
+const SchoolScripts = {
   loadData: function() {
     var req = new XMLHttpRequest();
     req.open("GET", "http://localhost:3000/sourcedata", true);
@@ -16,7 +12,7 @@ const RENAMEME = {
       "load",
       function() {
         data = JSON.parse(req.responseText);
-        RENAMEME.createMenu();
+        SchoolScripts.createMenu();
       }
     );
     req.send(null);
@@ -34,8 +30,7 @@ const RENAMEME = {
     document.getElementById("school-dropdown").innerHTML=theCompiledHtml;
 
     const selector = document.getElementById('school-selector');
-    console.log(selector);
-    selector.addEventListener('change', () => RENAMEME.createSchoolObj(selector.value));
+    selector.addEventListener('change', () => SchoolScripts.createSchoolObj(selector.value));
   },
 
   //Creates an object representing the information of the school in the spreadsheet at row "num"
@@ -79,7 +74,7 @@ const RENAMEME = {
             return (~~d[76])*children.length + (~~d[89]);
         }
     };
-    document.getElementById("print-tuition").innerHTML="<h2>"+RENAMEME.calculateTuition(school, RENAMEME.createFamilyObj())+"</h2>";
+    document.getElementById("print-tuition").innerHTML="<h2>"+SchoolScripts.calculateTuition(school, SchoolScripts.createFamilyObj())+"</h2>";
     //console.log(calculateTuition(school,createFamilyObj()));
   },
 
@@ -115,9 +110,4 @@ const RENAMEME = {
   }
 };
 
-domready(function () {
-  RENAMEME.loadData();
-  ReactDOM.render(<TuitionScoreCard />, document.getElementById('reactex'));
-})
-
-module.exports = RENAMEME;
+module.exports = SchoolScripts;
