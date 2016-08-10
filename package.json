@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "build-js": "browserify -t [ babelify ] app/public/js/init.js  -o app/public/js/build/bundle.js",
-    "watch-js": "watchify -v -t [ babelify ] app/public/js/init.js  -o app/public/js/build/bundle.js &",
+    "watch-js": "watchify -v -t [ babelify ] app/public/js/init.js  -o app/public/js/build/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
@@ -34,6 +34,7 @@
     "express-handlebars": "^3.0.0",
     "google-auth-library": "^0.9.8",
     "googleapis": "^11.0.0",
+    "handlebars": "^4.0.5",
     "promise-denodeify": "^1.2.2",
     "react": "^15.3.0",
     "react-dom": "^15.3.0"
