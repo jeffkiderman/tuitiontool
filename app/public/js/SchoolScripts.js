@@ -30,243 +30,247 @@ const SchoolScripts = {
     document.getElementById("school-dropdown").innerHTML=theCompiledHtml;
 
     const selector = document.getElementById('school-selector');
-    selector.addEventListener('change', () => SchoolScripts.createSchoolObj(selector.value));
+    selector.addEventListener('change', () => {
+            var sch = SchoolScripts.createSchoolObj(selector.value);
+            document.getElementById("print-tuition").innerHTML="<h2>"+SchoolScripts.calculateTuition(sch, SchoolScripts.createFamilyObj())+"</h2>";
+    });
   },
 
   //Creates an object representing the information of the school in the spreadsheet at row "num"
   createSchoolObj: function(num) {
     var d = data[num];
     console.log(d);
-    var school = {};
-    school.basicInfo = {
-        name: d[schoolName],
-        type: d[category],
-        website: d[website],
-        tuitOnline: d[tuitOnline],
-        tuitYear: d[tuitYear],
-        schoolNotes: d[schoolNotes],
-        tuitionNotes: d[tuitionNotes]
-    };
-    school.contact = {
-        address: d[address],
-        city: d[city],
-        state: d[state],
-        zip: d[zip],
-        longlat: d[longlat], 
-        phone: d[phone],
-        fax: d[fax],
-        fullAddress: function(){return (address + ", " + city + ", " + state + ", " + zip);}
-    };
-    school.inSession = {
-        schoolDays: d[schoolDays],
-        hours: d[hours]  
-    };    
-    school.students = {
-        grades: d[grades],
-        fte: d[fte],
-        enrollByGrade: [d[enrollpreK],
-                       d[enrollK],
-                       d[enroll1st],
-                       d[enroll2nd],
-                       d[enroll3rd],
-                       d[enroll4th],
-                       d[enroll5th],
-                       d[enroll6th],
-                       d[enroll7th],
-                       d[enroll8th],
-                       d[enroll9th],
-                       d[enroll10th],
-                       d[enroll11th],
-                       d[enroll12th]],
-        getEnrollment: function(grade){return enrollbyGrade[grade];}
-    };
-    school.baseTuition = {
-        baseByGrade: [d[baseK],
-                      d[base1st],
-                      d[base2nd],
-                      d[base3rd],
-                      d[base4th],
-                      d[base5th],
-                      d[base6th],
-                      d[base7th],
-                      d[base8th],
-                      d[base9th],
-                      d[base10th],
-                      d[base11th],
-                      d[base12th]],
-        getBase: function(grade){return school.baseTuition.baseByGrade[grade];},
-        baseSubtotal: function(kids){
-            var sub = 0;
-            for(var i=0;i<kids.length;i++){
-                sub += school.baseTuition.getBase(kids[i].grade);
-            }
-            return sub;
-        }
-    };
-    school.inclusionTuition = {
-        inclusionByGrade: [d[inclusionK],
-                          d[inclusion1st],
-                          d[inclusion2nd],
-                          d[inclusion3rd],
-                          d[inclusion4th],
-                          d[inclusion5th],
-                          d[inclusion6th],
-                          d[inclusion7th],
-                          d[inclusion8th],
-                          d[inclusion9th],
-                          d[inclusion10th],
-                          d[inclusion11th],
-                          d[inclusion12th]],
-        getInclusion: function(grade){return getInclusion[grade];},
-        inclusionSubtotal: function(kids){
-            var sub = 0;
-            for(var i=0;i<kids.length;i++){
-                sub += getInclusion(kids[i].grade);
-            }
-            return sub;
-        }
-    };
-    school.activities = {
-        activitiesByGrade: [d[activitiesK],
-                           d[activities1st],
-                           d[activities2nd],
-                           d[activities3rd],
-                           d[activities4th],
-                           d[activities5th],
-                           d[activities6th],
-                           d[activities7th],
-                           d[activities8th],
-                           d[activities9th],
-                           d[activities10th],
-                           d[activities11th],
-                           d[activities12th]],
-        getActivities: function(grade){return school.activities.activitiesByGrade[grade];},
-        activitiesSubtotal: function(kids){
-            var sub = 0;
-            for(var i=0;i<kids.length;i++){
-                sub += school.activities.getActivities(kids[i].grade);
-            }
-            return sub;
-        }
-    };
-    school.registration = {
-        regPerKidNew: d[regPerKidNew],
-        regPerKidReturn: d[regPerKidReturn],
-        regDate: d[regDate],
-        regLateFee: d[regLateFee],
-        regPerFamNew: d[regPerFamNew],
-        regPerFamReturn: d[regPerFamReturn],
-        regKDiscount: d[regKDiscount],
-        regIsLate: function(dateRegistered){
-            if(regDate == undefined) return false;
-            return dateRegistered>regDate;
+    var school = {
+        basicInfo: {
+            name: d[schoolName],
+            type: d[category],
+            website: d[website],
+            tuitOnline: d[tuitOnline],
+            tuitYear: d[tuitYear],
+            schoolNotes: d[schoolNotes],
+            tuitionNotes: d[tuitionNotes]
         },
-        regPerKid: function(returning,grade,dateRegistered){
-            var reg = 0;
-            if(!returning){ reg += school.registration.regPerKidNew;}
-            else {reg += school.registration.regPerKidReturn;}
-            if(grade == 0){reg -= regKDiscount;}
-            if (school.registration.regIsLate(dateRegistered)){reg += regLateFee;}
-            return reg;
+        contact: {
+            address: d[address],
+            city: d[city],
+            state: d[state],
+            zip: d[zip],
+            longlat: d[longlat], 
+            phone: d[phone],
+            fax: d[fax],
+            fullAddress: function(){return (address + ", " + city + ", " + state + ", " + zip);}
         },
-        regPerFamily: function(returning,dateRegistered){
-            var reg = 0;
-            if(!returning){reg += school.registration.regPerFamNew;}
-            else{reg += school.registration.regPerFamReturn;}
-            if (school.registration.regIsLate(dateRegistered)){reg += regLateFee;}
-            return reg;
+        inSession: {
+            schoolDays: d[schoolDays],
+            hours: d[hours]  
+        },    
+        students: {
+            grades: d[grades],
+            fte: d[fte],
+            enrollByGrade: [d[enrollpreK],
+                           d[enrollK],
+                           d[enroll1st],
+                           d[enroll2nd],
+                           d[enroll3rd],
+                           d[enroll4th],
+                           d[enroll5th],
+                           d[enroll6th],
+                           d[enroll7th],
+                           d[enroll8th],
+                           d[enroll9th],
+                           d[enroll10th],
+                           d[enroll11th],
+                           d[enroll12th]],
+            getEnrollment: function(grade){return enrollbyGrade[grade];}
         },
-        registrationSubtotal: function(kids,returning,dateRegistered){
-            var reg = 0;
-            for(var i=0; i < kids.length; i++){
-                reg += school.registration.regPerKid(returning,kids[0].grade,dateRegistered);
+        baseTuition: {
+            baseByGrade: [d[baseK],
+                          d[base1st],
+                          d[base2nd],
+                          d[base3rd],
+                          d[base4th],
+                          d[base5th],
+                          d[base6th],
+                          d[base7th],
+                          d[base8th],
+                          d[base9th],
+                          d[base10th],
+                          d[base11th],
+                          d[base12th]],
+            getBase: function(grade){return baseByGrade[grade];},
+            baseSubtotal: function(kids){
+                var sub = 0;
+                for(var i=0;i<kids.length;i++){
+                    sub += getBase(kids[i].grade);
+                }
+                return sub;
             }
-            reg += school.registration.regPerFamily(returning,dateRegistered);
-            return reg;
-        }
-    };
-    school.gradFee = {
-        gradFee8th: d[gradFee8th],
-        gradFee12th: d[gradFee12th],
-        getGradFee: function(grade){
-            if(grade == 8){ return gradFee8th; }
-            if(grade == 12){ return gradFee12th; }
-            return 0;
         },
-        gradFeeSubtotal: function(kids){
-            var sub = 0;
-            for(var i=0;i<kids.length;i++){
-                sub += getGradFee(kids[i].grade);
+        inclusionTuition: {
+            inclusionByGrade: [d[inclusionK],
+                              d[inclusion1st],
+                              d[inclusion2nd],
+                              d[inclusion3rd],
+                              d[inclusion4th],
+                              d[inclusion5th],
+                              d[inclusion6th],
+                              d[inclusion7th],
+                              d[inclusion8th],
+                              d[inclusion9th],
+                              d[inclusion10th],
+                              d[inclusion11th],
+                              d[inclusion12th]],
+            getInclusion: function(grade){return getInclusion[grade];},
+            inclusionSubtotal: function(kids){
+                var sub = 0;
+                for(var i=0;i<kids.length;i++){
+                    sub += getInclusion(kids[i].grade);
+                }
+                return sub;
             }
-            return sub;
-        }
-    };
-    school.ptaFees = {
-        ptaPerKid: d[ptaPerKid],
-        ptaPerFam: d[ptaPerFam],
-        ptaFeeSubtotal: function(kids){
-            var sub = ptaPerFam;
-            sub += (ptaPerKid * kids.length);
-            return sub; 
-        }
-    };
-    school.familyCommitments = {
-        scholarship: d[scholarshipPerKid],
-        familyObligation: d[familyObligation],
-        scripPerFam: d[scripPerFam],
-        familyCommitmentsSubtotal: function(){return scholarship + familyObligation + scripPerFam;}
-    };
-    school.security = {
-        securityPerKid: d[securityPerKid],
-        securityPerFam: d[securityPerFam],
-        securityFeeSubtotal: function(kids){
-            var sub = securityPerFam;
-            sub += (securityPerKid * kids.length);
-            return sub; 
-        }
-    };
-    school.building = {
-        buildingPerKid: d[buildingPerKid],
-        buildingPerFamAnnual: d[buildingPerFamAnnual],
-        buildingPerFamByYr: [d[buildingPerFamYr1],
-                            d[buildingPerFamYr2],
-                            d[buildingPerFamYr3],
-                            d[buildingPerFamYr4],
-                            d[buildingPerFamYr5],
-                            d[buildingPerFamYr6],
-                            d[buildingPerFamYr7],
-                            d[buildingPerFamYr8]],
-        buildingSubtotal: function(kids,yearsInSchool){
-            var sub = buildingPerFamAnnual;
-            sub += (buildingPerKid * kids.length);
-            if(yearInSchool <= buildingPerFamByYr.length){sub += buildingPerFamByYr[year-1];}
-            return sub;
-        }
-    };
-    school.discount = {
-        discountMultiKid: [0,
-                          0,
-                          d[discount2Kids],
-                          d[discount3Kids],
-                          d[discount4Kids],
-                          d[discount5Kids]],
-        discountSubtotal: function(kids){return (-1)*(discountMultiKid[Math.max(kids.length,5)])}
-    };
-    school.optionalLunch = d[optionalLunch];
-    school.totalTuition = function(kids,yearsInSchool,dateRegistered){
+        },
+        activities: {
+            activitiesByGrade: [d[activitiesK],
+                               d[activities1st],
+                               d[activities2nd],
+                               d[activities3rd],
+                               d[activities4th],
+                               d[activities5th],
+                               d[activities6th],
+                               d[activities7th],
+                               d[activities8th],
+                               d[activities9th],
+                               d[activities10th],
+                               d[activities11th],
+                               d[activities12th]],
+            getActivities: function(grade){return activitiesByGrade[grade];},
+            activitiesSubtotal: function(kids){
+                var sub = 0;
+                for(var i=0;i<kids.length;i++){
+                    sub += getActivities(kids[i].grade);
+                }
+                return sub;
+            }
+        },
+        registration: {
+            regPerKidNew: d[regPerKidNew],
+            regPerKidReturn: d[regPerKidReturn],
+            regDate: d[regDate],
+            regLateFee: d[regLateFee],
+            regPerFamNew: d[regPerFamNew],
+            regPerFamReturn: d[regPerFamReturn],
+            regKDiscount: d[regKDiscount],
+            regIsLate: function(dateRegistered){
+                if(regDate == undefined) return false;
+                return dateRegistered>regDate;
+            },
+            regPerKid: function(returning,grade,dateRegistered){
+                var reg = 0;
+                if(!returning){ reg += regPerKidNew;}
+                else {reg += egPerKidReturn;}
+                if(grade == 0){reg -= regKDiscount;}
+                if (regIsLate(dateRegistered)){reg += regLateFee;}
+                return reg;
+            },
+            regPerFamily: function(returning,dateRegistered){
+                var reg = 0;
+                if(!returning){reg += regPerFamNew;}
+                else{reg += regPerFamReturn;}
+                if (regIsLate(dateRegistered)){reg += regLateFee;}
+                return reg;
+            },
+            registrationSubtotal: function(kids,returning,dateRegistered){
+                var reg = 0;
+                for(var i=0; i < kids.length; i++){
+                    reg += regPerKid(returning,kids[0].grade,dateRegistered);
+                }
+                reg += regPerFamily(returning,dateRegistered);
+                return reg;
+            }
+        },
+        gradFee: {
+            gradFee8th: d[gradFee8th],
+            gradFee12th: d[gradFee12th],
+            getGradFee: function(grade){
+                if(grade == 8){ return gradFee8th; }
+                if(grade == 12){ return gradFee12th; }
+                return 0;
+            },
+            gradFeeSubtotal: function(kids){
+                var sub = 0;
+                for(var i=0;i<kids.length;i++){
+                    sub += getGradFee(kids[i].grade);
+                }
+                return sub;
+            }
+        },
+        ptaFees: {
+            ptaPerKid: d[ptaPerKid],
+            ptaPerFam: d[ptaPerFam],
+            ptaFeeSubtotal: function(kids){
+                var sub = ptaPerFam;
+                sub += (ptaPerKid * kids.length);
+                return sub; 
+            }
+        },
+        familyCommitments: {
+            scholarship: d[scholarshipPerKid],
+            familyObligation: d[familyObligation],
+            scripPerFam: d[scripPerFam],
+            familyCommitmentsSubtotal: function(){return scholarship + familyObligation + scripPerFam;}
+        },
+        security: {
+            securityPerKid: d[securityPerKid],
+            securityPerFam: d[securityPerFam],
+            securityFeeSubtotal: function(kids){
+                var sub = securityPerFam;
+                sub += (securityPerKid * kids.length);
+                return sub; 
+            }
+        },
+        building: {
+            buildingPerKid: d[buildingPerKid],
+            buildingPerFamAnnual: d[buildingPerFamAnnual],
+            buildingPerFamByYr: [d[buildingPerFamYr1],
+                                d[buildingPerFamYr2],
+                                d[buildingPerFamYr3],
+                                d[buildingPerFamYr4],
+                                d[buildingPerFamYr5],
+                                d[buildingPerFamYr6],
+                                d[buildingPerFamYr7],
+                                d[buildingPerFamYr8]],
+            buildingSubtotal: function(kids,yearsInSchool){
+                var sub = buildingPerFamAnnual;
+                sub += (buildingPerKid * kids.length);
+                if(yearInSchool <= buildingPerFamByYr.length){sub += buildingPerFamByYr[year-1];}
+                return sub;
+            }
+        },
+        discount: {
+            discountMultiKid: [0,
+                              0,
+                              d[discount2Kids],
+                              d[discount3Kids],
+                              d[discount4Kids],
+                              d[discount5Kids]],
+            discountSubtotal: function(kids){return (-1)*(discountMultiKid[Math.max(kids.length,5)])}
+        },
+        optionalLunch: d[optionalLunch],
+        totalTuition: function(kids,yearsInSchool,dateRegistered){
             var total = 0;
-            total += school.baseTuition.baseSubtotal(kids);
-            total += school.activities.activitiesSubtotal(kids);
-            total += school.registration.registrationSubtotal(kids,yearsInSchool,dateRegistered);
-            total += school.gradFee.gradFeeSubtotal(kids);
-            total += school.ptaFees.ptaFeeSubtotal(kids);
-            total += school.familyCommitments.familyCommitmentsSubtotal();
-            total += school.security.securityFeeSubtotal(kids);
-            total += school.building.buildingSubtotal(kids,yearsInSchool);
-            total += school.discount.discountSubtotal(kids);
+            total += baseTuition.baseSubtotal(kids);
+            total += activities.activitiesSubtotal(kids);
+            total += registration.registrationSubtotal(kids,yearsInSchool,dateRegistered);
+            total += gradFee.gradFeeSubtotal(kids);
+            total += ptaFees.ptaFeeSubtotal(kids);
+            total += familyCommitments.familyCommitmentsSubtotal();
+            total += security.securityFeeSubtotal(kids);
+            total += building.buildingSubtotal(kids,yearsInSchool);
+            total += discount.discountSubtotal(kids);
             return total;
+        }
     };
-    document.getElementById("print-tuition").innerHTML="<h2>"+SchoolScripts.calculateTuition(school, SchoolScripts.createFamilyObj())+"</h2>";
+    return school;
   },
     /*
     //Calculates total per-family costs for the school
