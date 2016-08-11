@@ -40,7 +40,6 @@ const SchoolScripts = {
   //Creates an object representing the information of the school in the spreadsheet at row "num"
   createSchoolObj: function(num) {
     var d = data[num];
-    console.log(d);
     var school = {
         basicInfo: getBasicInfoProps(d),
         contact: getContactProps(d),
@@ -56,22 +55,26 @@ const SchoolScripts = {
         security: getSecurityProps(d),
         building: getBuildingProps(d),
         discount: getDiscountProps(d),
-        optionalLunch: d[Cols.optionalLunch],
-        totalTuition: function(kids, yearsInSchool, dateRegistered) {
-          if(school.basicInfo.isTuitOnline() == undefined) {return "Tuition information not available for this school";}
-          var total = 0;
-          total += school.baseTuition.baseSubtotal(kids);
-          total += activities.activitiesSubtotal(kids);
-          total += registration.registrationSubtotal(kids,yearsInSchool,dateRegistered);
-          total += gradFee.gradFeeSubtotal(kids);
-          total += ptaFees.ptaFeeSubtotal(kids);
-          total += familyCommitments.familyCommitmentsSubtotal();
-          total += security.securityFeeSubtotal(kids);
-          total += building.buildingSubtotal(kids,yearsInSchool);
-          total += discount.discountSubtotal(kids);
-          return "$"+total.toLocaleString();
-      },
-    };
+        optionalLunch: d[Cols.optionalLunch]
+      };
+      // since totalTuition uses lots of funcions defined in school,
+      // add it to school after the rest of the school definition is created
+      school.totalTuition = function(kids, yearsInSchool, dateRegistered) {
+        if(school.basicInfo.isTuitOnline() == undefined) {
+          return "Tuition information not available for this school";
+        }
+        var total = 0;
+        total += school.baseTuition.baseSubtotal(kids);
+        total += school.activities.activitiesSubtotal(kids);
+        total += school.registration.registrationSubtotal(kids,yearsInSchool,dateRegistered);
+        total += school.gradFee.gradFeeSubtotal(kids);
+        total += school.ptaFees.ptaFeeSubtotal(kids);
+        total += school.familyCommitments.familyCommitmentsSubtotal();
+        total += school.security.securityFeeSubtotal(kids);
+        total += school.building.buildingSubtotal(kids,yearsInSchool);
+        total += school.discount.discountSubtotal(kids);
+        return "$"+total.toLocaleString();
+      };
     return school;
   },
     /*
@@ -148,7 +151,9 @@ function getBasicInfoProps(d){
     const tuitYear = d[Cols.tuitYear];
     const schoolNotes = d[Cols.schoolNotes];
     const tuitionNotes = d[Cols.tuitionNotes];
-    var isTuitOnline = function(){return tuitOnline};
+    return {
+      isTuitOnline: function(){return tuitOnline}
+    };
 }
 function getContactProps(d){
     const address = d[Cols.address];
@@ -158,12 +163,15 @@ function getContactProps(d){
     const longlat = d[Cols.longlat];
     const phone = d[Cols.phone];
     const fax = d[Cols.fax];
-    var fullAddress = function(){return (address + ", " + city + ", " + state + ", " + zip);}
+    return {
+      fullAddress: function(){return (address + ", " + city + ", " + state + ", " + zip);}
+    };
 }
+// doesn't do anything yet
 function getInSessionProps(d){
     const schoolDays = d[Cols.schoolDays];
     const hours = d[Cols.hours];
-}   
+}
 function getStudentsProps(d){
     const grades = d[Cols.grades];
     const fte = d[Cols.fte];
@@ -181,7 +189,9 @@ function getStudentsProps(d){
                    d[Cols.enroll10th],
                    d[Cols.enroll11th],
                    d[Cols.enroll12th]];
-    var getEnrollment = function(grade){return enrollbyGrade[grade];}
+    return {
+      getEnrollment: function(grade){return enrollbyGrade[grade];}
+    };
 }
 function getBaseTuitionProps(d){
     const baseByGrade = [d[Cols.baseK],
@@ -197,13 +207,17 @@ function getBaseTuitionProps(d){
                   d[Cols.base10th],
                   d[Cols.base11th],
                   d[Cols.base12th]];
-    var getBase = function(grade){return baseByGrade[grade];};
-    var baseSubtotal = function(kids){
+    const getBase = function(grade){return baseByGrade[grade];};
+    return {
+      getBase: getBase,
+      baseSubtotal: function(kids){
         var sub = 0;
         for(var i=0;i<kids.length;i++){
+            // note: this is calling the const, not the 1st key in this obj
             sub += getBase(kids[i].grade);
         }
         return sub;
+      }
     };
 }
 function getInclusionTuitionProps(d){
@@ -220,14 +234,16 @@ function getInclusionTuitionProps(d){
                       d[Cols.inclusion10th],
                       d[Cols.inclusion11th],
                       d[Cols.inclusion12th]];
-    var getInclusion = function(grade){return getInclusion[grade];};
-    var inclusionSubtotal = function(kids){
+    return {
+      getInclusion: function(grade){return getInclusion[grade];},
+      inclusionSubtotal: function(kids){
         var sub = 0;
         for(var i=0;i<kids.length;i++){
             sub += getInclusion(kids[i].grade);
         }
         return sub;
-    };
+      }
+  };
 }
 function getActivitiesProps(d){
     const activitiesByGrade = [d[Cols.activitiesK],
@@ -243,14 +259,17 @@ function getActivitiesProps(d){
                        d[Cols.activities10th],
                        d[Cols.activities11th],
                        d[Cols.activities12th]];
-    var getActivities = function(grade){return activitiesByGrade[grade];};
-    var activitiesSubtotal = function(kids){
+    const getActivities = function(grade){return activitiesByGrade[grade];};
+    return {
+      getActivities: getActivities,
+      activitiesSubtotal: function(kids){
         var sub = 0;
         for(var i=0;i<kids.length;i++){
             sub += getActivities(kids[i].grade);
         }
         return sub;
-    };
+    }
+  };
 }
 function getRegistrationProps(d) {
   const regPerKidNew = d[Cols.regPerKidNew];
@@ -298,41 +317,50 @@ function getRegistrationProps(d) {
 function getGradFeeProps(d){
     const gradFee8th = d[Cols.gradFee8th];
     const gradFee12th = d[Cols.gradFee12th];
-    var getGradFee = function(grade){
+    const getGradFee = function(grade){
         if(grade == 8){ return gradFee8th; }
         if(grade == 12){ return gradFee12th; }
         return 0;
     };
-    var gradFeeSubtotal = function(kids){
+    return {
+      getGradFee: getGradFee,
+      gradFeeSubtotal: function(kids){
         var sub = 0;
         for(var i=0;i<kids.length;i++){
             sub += getGradFee(kids[i].grade);
         }
         return sub;
+      }
     };
 }
 function getPtaFeesProps(d){
     const ptaPerKid = d[Cols.ptaPerKid];
     const ptaPerFam = d[Cols.ptaPerFam];
-    var ptaFeeSubtotal = function(kids){
+    return {
+      ptaFeeSubtotal: function(kids){
         var sub = ptaPerFam;
         sub += (ptaPerKid * kids.length);
         return sub;
-    };
+    }
+  };
 }
 function getFamilyCommitmentsProps(d){
     const scholarship = d[Cols.scholarshipPerKid];
     const familyObligation = d[Cols.familyObligation];
     const scripPerFam = d[Cols.scripPerFam];
-    var familyCommitmentsSubtotal = function(){return scholarship + familyObligation + scripPerFam;};
+    return {
+      familyCommitmentsSubtotal : function(){return scholarship + familyObligation + scripPerFam;}
+  };
 }
 function getSecurityProps(d){
     const securityPerKid = d[Cols.securityPerKid];
     const securityPerFam = d[Cols.securityPerFam];
-    var securityFeeSubtotal = function(kids){
+    return {
+      securityFeeSubtotal : function(kids){
         var sub = securityPerFam;
         sub += (securityPerKid * kids.length);
         return sub;
+      }
     };
 }
 function getBuildingProps(d){
@@ -346,12 +374,16 @@ function getBuildingProps(d){
                         d[Cols.buildingPerFamYr6],
                         d[Cols.buildingPerFamYr7],
                         d[Cols.buildingPerFamYr8]];
-    var buildingSubtotal = function(kids,yearsInSchool){
+    return {
+      buildingSubtotal: function(kids,yearsInSchool){
         var sub = buildingPerFamAnnual;
         sub += (buildingPerKid * kids.length);
-        if(yearInSchool <= buildingPerFamByYr.length){sub += buildingPerFamByYr[year-1];}
+        // FIXME:  Jeff, I edited this line from year - 1 to yearsInSchool - 1
+        // either fix or remove this comment :)
+        if(yearsInSchool <= buildingPerFamByYr.length){sub += buildingPerFamByYr[yearsInSchool-1];}
         return sub;
-    };
+    }
+  };
 }
 function getDiscountProps(d){
     const discountMultiKid = [0,
@@ -360,7 +392,9 @@ function getDiscountProps(d){
                       d[Cols.discount3Kids],
                       d[Cols.discount4Kids],
                       d[Cols.discount5Kids]];
-    var discountSubtotal = function(kids){return (-1)*(discountMultiKid[Math.max(kids.length,5)])};
+    return {
+      discountSubtotal : function(kids){return (-1)*(discountMultiKid[Math.max(kids.length,5)])}
+    };
 }
 
 module.exports = SchoolScripts;
