@@ -33,7 +33,7 @@ const SchoolScripts = {
     const selector = document.getElementById('school-selector');
     selector.addEventListener('change', () => {
             var sch = SchoolScripts.createSchoolObj(selector.value);
-            document.getElementById("print-tuition").innerHTML="<h2>"+SchoolScripts.calculateTuition(sch, SchoolScripts.createFamilyObj())+"</h2>";
+            document.getElementById("print-tuition").innerHTML="<h2>"+sch.totalTuition(SchoolScripts.createFamilyObj().kids,0,20150325)+"</h2>";
     });
   },
 
@@ -42,187 +42,23 @@ const SchoolScripts = {
     var d = data[num];
     console.log(d);
     var school = {
-        basicInfo: {
-            name: d[Cols.schoolName],
-            type: d[Cols.category],
-            website: d[Cols.website],
-            tuitOnline: d[Cols.tuitOnline],
-            tuitYear: d[Cols.tuitYear],
-            schoolNotes: d[Cols.schoolNotes],
-            tuitionNotes: d[Cols.tuitionNotes]
-        },
-        contact: {
-            address: d[Cols.address],
-            city: d[Cols.city],
-            state: d[Cols.state],
-            zip: d[Cols.zip],
-            longlat: d[Cols.longlat],
-            phone: d[Cols.phone],
-            fax: d[Cols.fax],
-            fullAddress: function(){return (address + ", " + city + ", " + state + ", " + zip);}
-        },
-        inSession: {
-            schoolDays: d[Cols.schoolDays],
-            hours: d[Cols.hours]
-        },
-        students: {
-            grades: d[Cols.grades],
-            fte: d[Cols.fte],
-            enrollByGrade: [d[Cols.enrollpreK],
-                           d[Cols.enrollK],
-                           d[Cols.enroll1st],
-                           d[Cols.enroll2nd],
-                           d[Cols.enroll3rd],
-                           d[Cols.enroll4th],
-                           d[Cols.enroll5th],
-                           d[Cols.enroll6th],
-                           d[Cols.enroll7th],
-                           d[Cols.enroll8th],
-                           d[Cols.enroll9th],
-                           d[Cols.enroll10th],
-                           d[Cols.enroll11th],
-                           d[Cols.enroll12th]],
-            getEnrollment: function(grade){return enrollbyGrade[grade];}
-        },
-        baseTuition: {
-            baseByGrade: [d[Cols.baseK],
-                          d[Cols.base1st],
-                          d[Cols.base2nd],
-                          d[Cols.base3rd],
-                          d[Cols.base4th],
-                          d[Cols.base5th],
-                          d[Cols.base6th],
-                          d[Cols.base7th],
-                          d[Cols.base8th],
-                          d[Cols.base9th],
-                          d[Cols.base10th],
-                          d[Cols.base11th],
-                          d[Cols.base12th]],
-            getBase: function(grade){return baseByGrade[grade];},
-            baseSubtotal: function(kids){
-                var sub = 0;
-                for(var i=0;i<kids.length;i++){
-                    sub += getBase(kids[i].grade);
-                }
-                return sub;
-            }
-        },
-        inclusionTuition: {
-            inclusionByGrade: [d[Cols.inclusionK],
-                              d[Cols.inclusion1st],
-                              d[Cols.inclusion2nd],
-                              d[Cols.inclusion3rd],
-                              d[Cols.inclusion4th],
-                              d[Cols.inclusion5th],
-                              d[Cols.inclusion6th],
-                              d[Cols.inclusion7th],
-                              d[Cols.inclusion8th],
-                              d[Cols.inclusion9th],
-                              d[Cols.inclusion10th],
-                              d[Cols.inclusion11th],
-                              d[Cols.inclusion12th]],
-            getInclusion: function(grade){return getInclusion[grade];},
-            inclusionSubtotal: function(kids){
-                var sub = 0;
-                for(var i=0;i<kids.length;i++){
-                    sub += getInclusion(kids[i].grade);
-                }
-                return sub;
-            }
-        },
-        activities: {
-            activitiesByGrade: [d[Cols.activitiesK],
-                               d[Cols.activities1st],
-                               d[Cols.activities2nd],
-                               d[Cols.activities3rd],
-                               d[Cols.activities4th],
-                               d[Cols.activities5th],
-                               d[Cols.activities6th],
-                               d[Cols.activities7th],
-                               d[Cols.activities8th],
-                               d[Cols.activities9th],
-                               d[Cols.activities10th],
-                               d[Cols.activities11th],
-                               d[Cols.activities12th]],
-            getActivities: function(grade){return activitiesByGrade[grade];},
-            activitiesSubtotal: function(kids){
-                var sub = 0;
-                for(var i=0;i<kids.length;i++){
-                    sub += getActivities(kids[i].grade);
-                }
-                return sub;
-            }
-        },
+        basicInfo: getBasicInfoProps(d),
+        contact: getContactProps(d),
+        inSession: getInSessionProps(d),
+        students: getStudentsProps(d),
+        baseTuition: getBaseTuitionProps(d),
+        inclusionTuition: getInclusionTuitionProps(d),
+        activities: getActivitiesProps(d),
         registration: getRegistrationProps(d),
-        gradFee: {
-            gradFee8th: d[Cols.gradFee8th],
-            gradFee12th: d[Cols.gradFee12th],
-            getGradFee: function(grade){
-                if(grade == 8){ return gradFee8th; }
-                if(grade == 12){ return gradFee12th; }
-                return 0;
-            },
-            gradFeeSubtotal: function(kids){
-                var sub = 0;
-                for(var i=0;i<kids.length;i++){
-                    sub += getGradFee(kids[i].grade);
-                }
-                return sub;
-            }
-        },
-        ptaFees: {
-            ptaPerKid: d[Cols.ptaPerKid],
-            ptaPerFam: d[Cols.ptaPerFam],
-            ptaFeeSubtotal: function(kids){
-                var sub = ptaPerFam;
-                sub += (ptaPerKid * kids.length);
-                return sub;
-            }
-        },
-        familyCommitments: {
-            scholarship: d[Cols.scholarshipPerKid],
-            familyObligation: d[Cols.familyObligation],
-            scripPerFam: d[Cols.scripPerFam],
-            familyCommitmentsSubtotal: function(){return scholarship + familyObligation + scripPerFam;}
-        },
-        security: {
-            securityPerKid: d[Cols.securityPerKid],
-            securityPerFam: d[Cols.securityPerFam],
-            securityFeeSubtotal: function(kids){
-                var sub = securityPerFam;
-                sub += (securityPerKid * kids.length);
-                return sub;
-            }
-        },
-        building: {
-            buildingPerKid: d[Cols.buildingPerKid],
-            buildingPerFamAnnual: d[Cols.buildingPerFamAnnual],
-            buildingPerFamByYr: [d[Cols.buildingPerFamYr1],
-                                d[Cols.buildingPerFamYr2],
-                                d[Cols.buildingPerFamYr3],
-                                d[Cols.buildingPerFamYr4],
-                                d[Cols.buildingPerFamYr5],
-                                d[Cols.buildingPerFamYr6],
-                                d[Cols.buildingPerFamYr7],
-                                d[Cols.buildingPerFamYr8]],
-            buildingSubtotal: function(kids,yearsInSchool){
-                var sub = buildingPerFamAnnual;
-                sub += (buildingPerKid * kids.length);
-                if(yearInSchool <= buildingPerFamByYr.length){sub += buildingPerFamByYr[year-1];}
-                return sub;
-            }
-        },
-        discount: {
-            discountMultiKid: [0,
-                              0,
-                              d[Cols.discount2Kids],
-                              d[Cols.discount3Kids],
-                              d[Cols.discount4Kids],
-                              d[Cols.discount5Kids]],
-            discountSubtotal: function(kids){return (-1)*(discountMultiKid[Math.max(kids.length,5)])}
-        },
+        gradFee: getGradFeeProps(d),
+        ptaFees: getPtaFeesProps(d),
+        familyCommitments: getFamilyCommitmentsProps(d),
+        security: getSecurityProps(d),
+        building: getBuildingProps(d),
+        discount: getDiscountProps(d),
         optionalLunch: d[Cols.optionalLunch],
         totalTuition: function(kids, yearsInSchool, dateRegistered) {
+          if(school.basicInfo.isTuitOnline() == undefined) {return "Tuition information not available for this school";}
           var total = 0;
           total += school.baseTuition.baseSubtotal(kids);
           total += activities.activitiesSubtotal(kids);
@@ -233,7 +69,7 @@ const SchoolScripts = {
           total += security.securityFeeSubtotal(kids);
           total += building.buildingSubtotal(kids,yearsInSchool);
           total += discount.discountSubtotal(kids);
-          return total;
+          return "$"+total.toLocaleString();
       },
     };
     return school;
@@ -294,16 +130,128 @@ const SchoolScripts = {
   },
 
   //Calculates total tuition bill for a given family and school
-  calculateTuition: function(sch, fam) {
+  /*calculateTuition: function(sch, fam) {
       /*if(sch.tuitionSaved == undefined){
           return "Tuition information not available for this school";
       }
       return "$"+(sch.perChild(fam.kids).reduce(function(a,b){return a+b;},0) + sch.perFamily + sch.registration(fam.returning,fam.kids)).toLocaleString();*/
-    if(sch.basicInfo.tuitOnline == undefined) {return "Tuition information not available for this school";}
-    return "$"+(sch.totalTuition(fam.kids,0,20160422)).toLocaleString();
-  }
+    //if(sch.basicInfo.isTuitOnline() == undefined) {return "Tuition information not available for this school";}
+    //return "$"+(sch.totalTuition(fam.kids,0,20160422)).toLocaleString();
+ // }
 };
 
+function getBasicInfoProps(d){
+    const name = d[Cols.schoolName];
+    const type = d[Cols.category];
+    const website = d[Cols.website];
+    const tuitOnline = d[Cols.tuitOnline];
+    const tuitYear = d[Cols.tuitYear];
+    const schoolNotes = d[Cols.schoolNotes];
+    const tuitionNotes = d[Cols.tuitionNotes];
+    var isTuitOnline = function(){return tuitOnline};
+}
+function getContactProps(d){
+    const address = d[Cols.address];
+    const city = d[Cols.city];
+    const state = d[Cols.state];
+    const zip = d[Cols.zip];
+    const longlat = d[Cols.longlat];
+    const phone = d[Cols.phone];
+    const fax = d[Cols.fax];
+    var fullAddress = function(){return (address + ", " + city + ", " + state + ", " + zip);}
+}
+function getInSessionProps(d){
+    const schoolDays = d[Cols.schoolDays];
+    const hours = d[Cols.hours];
+}   
+function getStudentsProps(d){
+    const grades = d[Cols.grades];
+    const fte = d[Cols.fte];
+    const enrollByGrade = [d[Cols.enrollpreK],
+                   d[Cols.enrollK],
+                   d[Cols.enroll1st],
+                   d[Cols.enroll2nd],
+                   d[Cols.enroll3rd],
+                   d[Cols.enroll4th],
+                   d[Cols.enroll5th],
+                   d[Cols.enroll6th],
+                   d[Cols.enroll7th],
+                   d[Cols.enroll8th],
+                   d[Cols.enroll9th],
+                   d[Cols.enroll10th],
+                   d[Cols.enroll11th],
+                   d[Cols.enroll12th]];
+    var getEnrollment = function(grade){return enrollbyGrade[grade];}
+}
+function getBaseTuitionProps(d){
+    const baseByGrade = [d[Cols.baseK],
+                  d[Cols.base1st],
+                  d[Cols.base2nd],
+                  d[Cols.base3rd],
+                  d[Cols.base4th],
+                  d[Cols.base5th],
+                  d[Cols.base6th],
+                  d[Cols.base7th],
+                  d[Cols.base8th],
+                  d[Cols.base9th],
+                  d[Cols.base10th],
+                  d[Cols.base11th],
+                  d[Cols.base12th]];
+    var getBase = function(grade){return baseByGrade[grade];};
+    var baseSubtotal = function(kids){
+        var sub = 0;
+        for(var i=0;i<kids.length;i++){
+            sub += getBase(kids[i].grade);
+        }
+        return sub;
+    };
+}
+function getInclusionTuitionProps(d){
+    const inclusionByGrade = [d[Cols.inclusionK],
+                      d[Cols.inclusion1st],
+                      d[Cols.inclusion2nd],
+                      d[Cols.inclusion3rd],
+                      d[Cols.inclusion4th],
+                      d[Cols.inclusion5th],
+                      d[Cols.inclusion6th],
+                      d[Cols.inclusion7th],
+                      d[Cols.inclusion8th],
+                      d[Cols.inclusion9th],
+                      d[Cols.inclusion10th],
+                      d[Cols.inclusion11th],
+                      d[Cols.inclusion12th]];
+    var getInclusion = function(grade){return getInclusion[grade];};
+    var inclusionSubtotal = function(kids){
+        var sub = 0;
+        for(var i=0;i<kids.length;i++){
+            sub += getInclusion(kids[i].grade);
+        }
+        return sub;
+    };
+}
+function getActivitiesProps(d){
+    const activitiesByGrade = [d[Cols.activitiesK],
+                       d[Cols.activities1st],
+                       d[Cols.activities2nd],
+                       d[Cols.activities3rd],
+                       d[Cols.activities4th],
+                       d[Cols.activities5th],
+                       d[Cols.activities6th],
+                       d[Cols.activities7th],
+                       d[Cols.activities8th],
+                       d[Cols.activities9th],
+                       d[Cols.activities10th],
+                       d[Cols.activities11th],
+                       d[Cols.activities12th]];
+    var getActivities = function(grade){return activitiesByGrade[grade];};
+    var activitiesSubtotal = function(kids){
+        var sub = 0;
+        for(var i=0;i<kids.length;i++){
+            sub += getActivities(kids[i].grade);
+        }
+        return sub;
+    };
+}
 function getRegistrationProps(d) {
   const regPerKidNew = d[Cols.regPerKidNew];
   const regPerKidReturn = d[Cols.regPerKidReturn];
@@ -347,5 +295,72 @@ function getRegistrationProps(d) {
       registrationSubtotal: registrationSubtotal
     };
   }
+function getGradFeeProps(d){
+    const gradFee8th = d[Cols.gradFee8th];
+    const gradFee12th = d[Cols.gradFee12th];
+    var getGradFee = function(grade){
+        if(grade == 8){ return gradFee8th; }
+        if(grade == 12){ return gradFee12th; }
+        return 0;
+    };
+    var gradFeeSubtotal = function(kids){
+        var sub = 0;
+        for(var i=0;i<kids.length;i++){
+            sub += getGradFee(kids[i].grade);
+        }
+        return sub;
+    };
+}
+function getPtaFeesProps(d){
+    const ptaPerKid = d[Cols.ptaPerKid];
+    const ptaPerFam = d[Cols.ptaPerFam];
+    var ptaFeeSubtotal = function(kids){
+        var sub = ptaPerFam;
+        sub += (ptaPerKid * kids.length);
+        return sub;
+    };
+}
+function getFamilyCommitmentsProps(d){
+    const scholarship = d[Cols.scholarshipPerKid];
+    const familyObligation = d[Cols.familyObligation];
+    const scripPerFam = d[Cols.scripPerFam];
+    var familyCommitmentsSubtotal = function(){return scholarship + familyObligation + scripPerFam;};
+}
+function getSecurityProps(d){
+    const securityPerKid = d[Cols.securityPerKid];
+    const securityPerFam = d[Cols.securityPerFam];
+    var securityFeeSubtotal = function(kids){
+        var sub = securityPerFam;
+        sub += (securityPerKid * kids.length);
+        return sub;
+    };
+}
+function getBuildingProps(d){
+    const buildingPerKid = d[Cols.buildingPerKid];
+    const buildingPerFamAnnual = d[Cols.buildingPerFamAnnual];
+    const buildingPerFamByYr = [d[Cols.buildingPerFamYr1],
+                        d[Cols.buildingPerFamYr2],
+                        d[Cols.buildingPerFamYr3],
+                        d[Cols.buildingPerFamYr4],
+                        d[Cols.buildingPerFamYr5],
+                        d[Cols.buildingPerFamYr6],
+                        d[Cols.buildingPerFamYr7],
+                        d[Cols.buildingPerFamYr8]];
+    var buildingSubtotal = function(kids,yearsInSchool){
+        var sub = buildingPerFamAnnual;
+        sub += (buildingPerKid * kids.length);
+        if(yearInSchool <= buildingPerFamByYr.length){sub += buildingPerFamByYr[year-1];}
+        return sub;
+    };
+}
+function getDiscountProps(d){
+    const discountMultiKid = [0,
+                      0,
+                      d[Cols.discount2Kids],
+                      d[Cols.discount3Kids],
+                      d[Cols.discount4Kids],
+                      d[Cols.discount5Kids]];
+    var discountSubtotal = function(kids){return (-1)*(discountMultiKid[Math.max(kids.length,5)])};
+}
 
 module.exports = SchoolScripts;
