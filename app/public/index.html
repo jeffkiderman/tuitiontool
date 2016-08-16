@@ -11,22 +11,6 @@
 
 <body>
     <h1>Welcome!</h1>
-
-    <script id="school-selection-form" type="text/x-handlebars-template" >
-        <form id="schoollist"></form>
-        <h2>Select a School from the Menu Below</h2>
-        <select name="schoolname" form="schoollist" id="school-selector">
-            <option selected disabled>Choose School</option>
-            {{#each dataset}}
-                <option value="{{@index}}">{{this.[0]}}</option>
-            {{/each}}
-        </select>
-    </script>
-
-    <div id="school-dropdown"></div>
-    <div id="print-tuition">
-    </div>
-
     <div id="react-root">
 </body>
 </html>

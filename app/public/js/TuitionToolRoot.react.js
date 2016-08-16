@@ -1,6 +1,7 @@
 'use strict'
 //@flow
 
+const Cols = require('./Cols');
 const Kid = require('./Kid.react');
 const FamilyInputForm = require('./FamilyInputForm.react');
 const React = require('react');
@@ -11,11 +12,29 @@ var TuitionToolRoot = React.createClass({
   getInitialState: function() {
     return {
       kids: [],
-      school: 0,
+      currentSchoolIndex: -1,
       kidID: 0,
+      allSchoolData: [],
+      schoolOptionData: []
     };
   },
   componentWillMount: function() {
+    var req = new XMLHttpRequest();
+    req.open("GET", "http://localhost:3000/sourcedata");
+    req.addEventListener(
+      "load",
+      function() {
+        const allSchoolData = JSON.parse(req.responseText);
+        const schoolOptionData = allSchoolData.map(
+          (row, index) => ({value: index, name: row[Cols.schoolName]})
+        );
+        this.setState({
+          allSchoolData: allSchoolData,
+          schoolOptionData: schoolOptionData
+        });
+      }.bind(this)
+    );
+    req.send();
     // start with one empty kid
     this.setState({
       kids:[this.getNewKid()]
@@ -47,7 +66,7 @@ var TuitionToolRoot = React.createClass({
   getNewKid:  function() {
     const newKid = {
       id: this.state.kidID,
-      age: 0,
+      grade: 0,
       name: '',
       gender:'',
       onKidChange: this.handleKidChange,
@@ -57,18 +76,24 @@ var TuitionToolRoot = React.createClass({
     this.setState({kidID: this.state.kidID + 1});
     return newKid;
   },
+  onSchoolChange: function(newSchoolValue: number) {
+    this.setState({currentSchoolIndex: newSchoolValue});
+  },
   render: function() {
+    const index = this.state.currentSchoolIndex;
+    const currentSchool = this.state.allSchoolData[index];
     return <div>
       <FamilyInputForm
         kids={this.state.kids}
         onNewKid={this.handleNewKid}
       />
-      {/* TODO: for tuition selector & ScoreCard,
-        need to integrate with SchoolScripts */}
-      <TuitionSelector/>
+      <TuitionSelector
+        selectedSchool={index}
+        schoolData={this.state.schoolOptionData}
+        onSchoolChange={this.onSchoolChange}/>
       <TuitionScoreCard
         kids={this.state.kids}
-        school={this.state.school}
+        schoolData={currentSchool}
       />
     </div>;
   }

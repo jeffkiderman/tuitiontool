@@ -30,12 +30,12 @@ var Kid = React.createClass({
             defaultValue={this.props.name}/>
         </div>
         <div>
-          Age:
+          Grade:
           <input
-            className="kid-age"
-            onChange={(event) => this.handleChange(event, 'age')}
+            className="kid-grade"
+            onChange={(event) => this.handleChange(event, 'grade')}
             type="number"
-            defaultValue={this.props.age}/>
+            defaultValue={this.props.grade}/>
         </div>
         <div>
           Gender:

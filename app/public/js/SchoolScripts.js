@@ -1,45 +1,10 @@
 'use strict';
 
-const Handlebars = require('handlebars');
 const Cols = require('./Cols');
-var data;
-
 //Request data from server
 const SchoolScripts = {
-  loadData: function() {
-    var req = new XMLHttpRequest();
-    req.open("GET", "http://localhost:3000/sourcedata", true);
-    req.addEventListener(
-      "load",
-      function() {
-        data = JSON.parse(req.responseText);
-        SchoolScripts.createMenu();
-      }
-    );
-    req.send(null);
-  },
-
-  //compiles templates
-  createMenu: function() {
-    // Grab the template script
-    var theTemplateScript = document.getElementById("school-selection-form").innerHTML;
-    // Compile the template
-    var theTemplate = Handlebars.compile(theTemplateScript);
-    // Pass our data to the template
-    var theCompiledHtml = theTemplate({dataset:data});
-    // Add the compiled html to the page
-    document.getElementById("school-dropdown").innerHTML=theCompiledHtml;
-
-    const selector = document.getElementById('school-selector');
-    selector.addEventListener('change', () => {
-            var sch = SchoolScripts.createSchoolObj(selector.value);
-            document.getElementById("print-tuition").innerHTML="<h2>"+sch.totalTuition(SchoolScripts.createFamilyObj().kids,0,20150325)+"</h2>";
-    });
-  },
-
   //Creates an object representing the information of the school in the spreadsheet at row "num"
-  createSchoolObj: function(num) {
-    var d = data[num];
+  createSchoolObj: function(d) {
     var school = {
         basicInfo: getBasicInfoProps(d),
         contact: getContactProps(d),
