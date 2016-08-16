@@ -1,5 +1,6 @@
 [ignore]
-.*/node_modules/*
+/Users/heymiki/dev/tuitiontool/node_modules/fbjs/lib/shallowEqual.js.flow
+/Users/heymiki/dev/tuitiontool/node_modules/fbjs/lib/Deferred.js.flow
 [include]
 
 [libs]

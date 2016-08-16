@@ -1,0 +1,40 @@
+
+.kid-root {
+  border: thin solid green;
+  width: 350px;
+  padding: 5px;
+  margin-bottom: 3px;
+}
+
+.kid-root:first-child {
+  margin-top: 3px;
+}
+
+.kid-root:last-child {
+  margin-bottom: 0px;
+}
+
+.kid-age {
+  width: 40px;
+}
+
+.kid-xout {
+  float: right;
+  cursor: pointer;
+}
+
+.add-kid-button {
+  background-color: green;
+  height:20px;
+  color: white;
+}
+
+.kids-section {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.family-section {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}

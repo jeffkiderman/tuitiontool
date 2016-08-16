@@ -40,11 +40,13 @@
     "react-dom": "^15.3.0"
   },
   "devDependencies": {
+    "babel-preset-stage-2": "^6.13.0",
     "flow-bin": "^0.27.0"
   },
   "babel": {
     "presets": [
-      "react"
+      "react",
+      "stage-2"
     ]
   }
 }
