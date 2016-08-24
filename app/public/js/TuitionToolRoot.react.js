@@ -39,6 +39,7 @@ var TuitionToolRoot = React.createClass({
         const schoolOptionData = allSchoolData.map(
           (row, index) => ({value: index, name: row[Cols.schoolName]})
         );
+        console.log(schoolOptionData);
         // setState takes an object of key-value pairs that you want to set.
         // the ones that you don't set don't update.  In this case, we get the
         // spreadsheet info from the server, and save all of it one time in this
