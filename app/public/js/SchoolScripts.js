@@ -25,30 +25,35 @@ const SchoolScripts = {
       // since totalTuition uses lots of funcions defined in school,
       // add it to school after the rest of the school definition is created
       school.totalTuition = function(kids, yearsInSchool, dateRegistered) {
-          if(school.basicInfo.isTuitOnline() == false) {
+        if(school.basicInfo.isTuitOnline() == false) {
           return "Tuition information not available for this school";
         }
         var total = 0;
-        //console.log(total + " line 67");
-        total += school.baseTuition.baseSubtotal(kids);
-        // console.log(total + " line 69");
-        total += school.activities.activitiesSubtotal(kids);
-        // console.log(total + " line 71");
-        total += school.registration.registrationSubtotal(kids,yearsInSchool,dateRegistered);
-        //  console.log(total + " line 73");
-        total += school.gradFee.gradFeeSubtotal(kids);
-        //  console.log(total + " line 75");
-        total += school.ptaFees.ptaFeeSubtotal(kids);
-        //  console.log(total + " line 77");
-        total += school.familyCommitments.familyCommitmentsSubtotal();
-        //  console.log(total + " line 79");
-        total += school.security.securityFeeSubtotal(kids);
-        //  console.log(total + " line 81");
-        total += school.building.buildingSubtotal(kids,yearsInSchool);
-        //  console.log(total + " line 83");
-        total += school.discount.discountSubtotal(kids);
-        //  console.log(total + " line 85");
-        return "$"+total.toLocaleString();
+        var bill = [];
+          
+        var base = school.baseTuition.baseSubtotal(kids);
+        total += base;
+        var fees = school.activities.activitiesSubtotal(kids) + school.gradFee.gradFeeSubtotal(kids) + school.ptaFees.ptaFeeSubtotal(kids);
+        total += fees;
+        var reg = school.registration.registrationSubtotal(kids,yearsInSchool,dateRegistered);
+        total += reg;
+        var familyCom = school.familyCommitments.familyCommitmentsSubtotal();
+        total += familyCom;
+        var build = school.security.securityFeeSubtotal(kids) + school.building.buildingSubtotal(kids,yearsInSchool);
+        total += build;
+        var discount = school.discount.discountSubtotal(kids);
+        total += discount;
+          
+        bill = [{id:1, descrip:"Base Tuition", perChild:(base/kids.length).toLocaleString(), perFam:base.toLocaleString()},
+               {id:2, descrip:"Fees", perChild:fees/kids.length, perFam:fees},
+               {id:3, descrip:"Registration Fees", perChild:reg/kids.length, perFam:reg},
+                {id:4, descrip:"Family Commitment", perChild:familyCom/kids.length, perFam:familyCom},
+                {id:5, descrip:"Building & Security Fees/Fund", perChild:build/kids.length, perFam:build},
+                {id:6, descrip:"Discount", perChild:discount/kids.length, perFam:discount},
+                {id:7, descrip:"Total Cost", perChild:total/kids.length, perFam:total}
+               ];
+          
+        return bill;
       };
     return school;
   },

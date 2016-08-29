@@ -4,6 +4,7 @@
 const Cols = require('./Cols');
 const React = require('react');
 const SchoolScripts = require('./SchoolScripts');
+const TuitionCostTable = require('./TuitionCostTable.react');
 
 var TuitionScoreCard = React.createClass({
   render: function() {
@@ -14,8 +15,11 @@ var TuitionScoreCard = React.createClass({
     const totalTuition = schoolObj.totalTuition(this.props.kids, 0, 20150325);
     return <div>
       <div>School Name: {this.props.schoolData[Cols.schoolName]}</div>
-      <div>Tuition Details {'TODO: haz no details...yet!'}</div>
-      <div>Cost: {totalTuition}</div>
+      <div>Tuition Details:
+        <TuitionCostTable
+            bill={totalTuition}
+        />
+        </div>
     </div>;
   }
 });

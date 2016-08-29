@@ -7,6 +7,7 @@ const FamilyInputForm = require('./FamilyInputForm.react');
 const React = require('react');
 const TuitionScoreCard = require('./TuitionScoreCard.react');
 const TuitionSelector = require('./TuitionSelector.react');
+const TuitionCostTable = require('./TuitionCostTable.react');
 
 var TuitionToolRoot = React.createClass({
   // getInitialState is part of the react lifecycle
@@ -35,11 +36,12 @@ var TuitionToolRoot = React.createClass({
       function() {
         // remember, this function won't get called until this
         // ajax request comes back.
+        //allSchoolData is an array representing the data from the spreadsheet
         const allSchoolData = JSON.parse(req.responseText);
+        //schoolOptionData is an array of objects representing schoolName-index(row) pairs of schools in allSchoolData
         const schoolOptionData = allSchoolData.map(
           (row, index) => ({value: index, name: row[Cols.schoolName]})
         );
-        console.log(schoolOptionData);
         // setState takes an object of key-value pairs that you want to set.
         // the ones that you don't set don't update.  In this case, we get the
         // spreadsheet info from the server, and save all of it one time in this
