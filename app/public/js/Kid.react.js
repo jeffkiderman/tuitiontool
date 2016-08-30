@@ -1,7 +1,7 @@
 //Kid.js
 //@flow
 
-const React = require('React');
+const React = require('react');
 
 var Kid = React.createClass({
   handleChange: function(event: Object, key: string) {
