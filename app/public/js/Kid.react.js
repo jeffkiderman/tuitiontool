@@ -1,10 +1,15 @@
-//Kid.js
+'use strict'
 //@flow
 
 const React = require('react');
 
-var Kid = React.createClass({
-  handleChange: function(event: Object, key: string) {
+import type {KidObject} from './TuitionFlowTypes';
+type PropTypes = KidObject;
+
+class Kid extends React.Component {
+  props: PropTypes;
+
+  handleChange = (event: Object, key: string) => {
     const value = event.target.value;
     // make a copy of props (which is a js object of key-value pairs)
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -20,8 +25,9 @@ var Kid = React.createClass({
       this.props.id,
       newKidObj,
     );
-  },
-  render: function() {
+  }
+
+  render() {
     return (
       <div className="kid-root">
         {/* this is where it starts to get real sexy.  click on the X, and
@@ -89,6 +95,6 @@ var Kid = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = Kid;

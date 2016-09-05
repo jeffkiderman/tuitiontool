@@ -1,4 +1,5 @@
-// Cols.js
+'use strict'
+// @flow
 
 module.exports = {
   schoolName : 0,

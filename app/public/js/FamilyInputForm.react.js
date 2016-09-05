@@ -4,6 +4,13 @@
 const Kid = require('./Kid.react');
 const React = require('react');
 
+import type {KidObject} from './TuitionFlowTypes';
+
+type PropTypes = {
+  kids: Array<KidObject>,
+  onNewKid: () => void,
+}
+
 // We're getting a nice separation of concerns here.  Now we're in family-land
 // and we care about two things:
 // 1- displaying the fam
@@ -12,9 +19,9 @@ const React = require('react');
 // the function that was passed into this component -- which conveniently affect
 // state in the TuitionToolRoot.  Were we only to modify state in this component,
 // TuitionToolRoot would not be able to read it or react to it.
-var FamilyInputForm = React.createClass({
+class FamilyInputForm extends React.Component{
   // jumping right into the render funtion!
-  render: function() {
+  render() {
     // this.props.kid is an array of kid objects <-- simple js objects.
     // now we take each kid object and pass them as props to a Kid component
     const kidsUI = this.props.kids.map(
@@ -43,6 +50,6 @@ var FamilyInputForm = React.createClass({
       </div>
     </div>;
   }
-});
+}
 
 module.exports = FamilyInputForm;

@@ -6,8 +6,16 @@ const React = require('react');
 const SchoolScripts = require('./SchoolScripts');
 const TuitionCostTable = require('./TuitionCostTable.react');
 
-var TuitionScoreCard = React.createClass({
-  render: function() {
+import type {KidObject} from './TuitionFlowTypes';
+type PropTypes = {
+  kids: Array<KidObject>,
+  schoolData: Array<string>
+}
+
+class TuitionScoreCard extends React.Component {
+  props: PropTypes;
+
+  render() {
     if (!this.props.schoolData) {
       return null;
     }
@@ -22,6 +30,6 @@ var TuitionScoreCard = React.createClass({
         </div>
     </div>;
   }
-});
+}
 
 module.exports = TuitionScoreCard;

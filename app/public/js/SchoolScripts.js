@@ -25,12 +25,12 @@ const SchoolScripts = {
       // since totalTuition uses lots of funcions defined in school,
       // add it to school after the rest of the school definition is created
       school.totalTuition = function(kids, yearsInSchool, dateRegistered) {
-        if(school.basicInfo.isTuitOnline() == false) {
-          return "Tuition information not available for this school";
+        if(school.basicInfo.isTuitOnline() === false) {
+          return null;
         }
         var total = 0;
         var bill = [];
-          
+
         var base = school.baseTuition.baseSubtotal(kids);
         total += base;
         var fees = school.activities.activitiesSubtotal(kids) + school.gradFee.gradFeeSubtotal(kids) + school.ptaFees.ptaFeeSubtotal(kids);
@@ -43,7 +43,7 @@ const SchoolScripts = {
         total += build;
         var discount = school.discount.discountSubtotal(kids);
         total += discount;
-          
+
         bill = [{id:1, descrip:"Base Tuition", perChild:(base/kids.length).toLocaleString(), perFam:base.toLocaleString()},
                {id:2, descrip:"Fees", perChild:fees/kids.length, perFam:fees},
                {id:3, descrip:"Registration Fees", perChild:reg/kids.length, perFam:reg},
@@ -52,7 +52,7 @@ const SchoolScripts = {
                 {id:6, descrip:"Discount", perChild:discount/kids.length, perFam:discount},
                 {id:7, descrip:"Total Cost", perChild:total/kids.length, perFam:total}
                ];
-          
+
         return bill;
       };
     return school;

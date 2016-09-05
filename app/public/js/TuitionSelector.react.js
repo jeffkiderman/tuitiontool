@@ -1,21 +1,31 @@
-// TuitionSelector.react
 'use strict'
-//@flow
+// @flow
 
 const React = require('react');
 const TuitionScoreCard = require('./TuitionScoreCard.react');
 
+import type {SchoolOption} from './TuitionFlowTypes';
+
+type PropTypes = {
+  selectedSchool: number,
+  schoolData: Array<SchoolOption>,
+  onSchoolChange: (newSchoolValue: number) => void
+}
+
 // overall, this component is responsible for:
 // 1- displaying the select input object to the user
 // 2- telling the TuitionToolRoot when the select changes
-var TuitionSelector = React.createClass({
+class TuitionSelector extends React.Component {
+  props: PropTypes;
+
   // for convenience I define this component's own handleSchoolChange funciton,
   // but in practice, it's just callig the onSchoolChange function that was
   // sent down in props.
-  handleSchoolChange: function(event) {
-    this.props.onSchoolChange(event.target.value);
-  },
-  render: function() {
+  handleSchoolChange = (event: Object) => {
+    this.props.onSchoolChange(parseInt(event.target.value, 10));
+  }
+
+  render() {
     return (
       // select tag documentation is here:
       // https://facebook.github.io/react/docs/forms.html
@@ -60,11 +70,12 @@ var TuitionSelector = React.createClass({
           (optionData) =>
             <option value={optionData.value} key={optionData.value}>
               {optionData.name}
+              {optionData.hasData ? null : ' *no data*'}
             </option>
         )}
       </select>
     );
   }
-});
+}
 
 module.exports = TuitionSelector;
