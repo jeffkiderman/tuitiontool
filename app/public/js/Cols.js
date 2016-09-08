@@ -110,5 +110,7 @@ module.exports = {
   discount4Kids : 105,
   discount5Kids : 106,
   discountShulMembership : 107,
-  tuitionNotes : 108
+  tuitionNotes : 108,
+    boys: 109,
+    girls: 110
 }

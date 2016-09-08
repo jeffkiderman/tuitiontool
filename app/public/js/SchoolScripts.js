@@ -90,10 +90,24 @@ function getBasicInfoProps(d){
     const tuitYear = d[Cols.tuitYear];
     const schoolNotes = d[Cols.schoolNotes];
     const tuitionNotes = d[Cols.tuitionNotes];
+    var boygirl = "";
+    if(d[Cols.boys] == "Yes" && d[Cols.girls] == "Yes"){
+        boygirl = "Boys & Girls";
+    }
+    else if(d[Cols.girls] == "Yes" && d[Cols.girls] == "No"){
+        boygirl = "Boys Only";
+    }
+    else if(d[Cols.boys] == "Yes" && d[Cols.boys] == "No")
+        boygirl = "Girls Only";
     return {
       isTuitOnline: function(){
           if(tuitOnline == "Yes"){return true;}
           return false;
+      },
+      printSchoolInfo: function(){
+          return [{id:1, value:"Type: " + type},
+                  {id:2, value:"Website: " + website},
+                  {id:3, value:"Gender: " + boygirl}];
       }
     };
 }
