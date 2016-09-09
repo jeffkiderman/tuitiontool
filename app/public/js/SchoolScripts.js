@@ -7,7 +7,6 @@ const SchoolScripts = {
   createSchoolObj: function(d) {
     var school = {
         basicInfo: getBasicInfoProps(d),
-        contact: getContactProps(d),
         inSession: getInSessionProps(d),
         students: getStudentsProps(d),
         baseTuition: getBaseTuitionProps(d),
@@ -84,7 +83,12 @@ const SchoolScripts = {
 
 function getBasicInfoProps(d){
     const name = d[Cols.schoolName];
+    const address = d[Cols.address];
+    const city = d[Cols.city];
+    const state = d[Cols.state];
+    const zip = d[Cols.zip];
     const type = d[Cols.category];
+    const grades = d[Cols.grades];
     const website = d[Cols.website];
     const tuitOnline = d[Cols.tuitOnline];
     const tuitYear = d[Cols.tuitYear];
@@ -105,22 +109,12 @@ function getBasicInfoProps(d){
           return false;
       },
       printSchoolInfo: function(){
-          return [{id:1, value:"Type: " + type},
-                  {id:2, value:"Website: " + website},
-                  {id:3, value:"Gender: " + boygirl}];
+          return [{id:1, value:"\u003ca href=\"" + website + "\"\u003e" + website + "\u003c/a \u003e"},
+                  {id:2, value:address + ", " + city + ", " + state + ", " + zip},
+                  {id:3, value:"Type: " + type},
+                  {id:4, value:"Gender: " + boygirl},
+                  {id:5, value:"Grades: " + grades}];
       }
-    };
-}
-function getContactProps(d){
-    const address = d[Cols.address];
-    const city = d[Cols.city];
-    const state = d[Cols.state];
-    const zip = d[Cols.zip];
-    const longlat = d[Cols.longlat];
-    const phone = d[Cols.phone];
-    const fax = d[Cols.fax];
-    return {
-      fullAddress: function(){return (address + ", " + city + ", " + state + ", " + zip);}
     };
 }
 // doesn't do anything yet

@@ -23,10 +23,10 @@ class TuitionScoreCard extends React.Component {
     const totalTuition = schoolObj.totalTuition(this.props.kids, 0, 20150325);
     const info = schoolObj.basicInfo.printSchoolInfo();
     return <div>
-      <div>School Name: {this.props.schoolData[Cols.schoolName]}</div>
       <div>
-      {info.map(function(line){
-          return <p key={line.id}>{line.value}</p>;
+      {info.map(function(line){    
+       if(line.id==1) return <p dangerouslySetInnerHTML={{__html: line.value}}></p>; 
+       return <p key={line.id}>{line.value}</p>;
       })}
         <TuitionCostTable
             bill={totalTuition}
