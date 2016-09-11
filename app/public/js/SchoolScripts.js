@@ -34,7 +34,7 @@ const SchoolScripts = {
         total += base;
         var fees = school.activities.activitiesSubtotal(kids) + school.gradFee.gradFeeSubtotal(kids) + school.ptaFees.ptaFeeSubtotal(kids);
         total += fees;
-        var reg = school.registration.registrationSubtotal(kids,yearsInSchool,dateRegistered);
+        var reg = school.registration.registrationSubtotal(kids,yearsInSchool);
         total += reg;
         var familyCom = school.familyCommitments.familyCommitmentsSubtotal();
         total += familyCom;
@@ -94,6 +94,7 @@ function getBasicInfoProps(d){
     const tuitYear = d[Cols.tuitYear];
     const schoolNotes = d[Cols.schoolNotes];
     const tuitionNotes = d[Cols.tuitionNotes];
+    if(tuitionNotes == ""){tuitionNotes = "N/A"}
     var boygirl = "";
     if(d[Cols.boys] == "Yes" && d[Cols.girls] == "Yes"){
         boygirl = "Boys & Girls";
@@ -113,7 +114,8 @@ function getBasicInfoProps(d){
                   {id:2, value:address + ", " + city + ", " + state + ", " + zip},
                   {id:3, value:"Type: " + type},
                   {id:4, value:"Gender: " + boygirl},
-                  {id:5, value:"Grades: " + grades}];
+                  {id:5, value:"Grades: " + grades},
+                  {id:6, value:"Tuition Notes: " + tuitionNotes}];
       }
     };
 }
@@ -230,35 +232,36 @@ function getRegistrationProps(d) {
   const regPerFamReturn = ~~d[Cols.regPerFamReturn];
   const regKDiscount = ~~d[Cols.regKDiscount];
 
+    /* THIS WILL BE FOR LATER WHEN WE ADD THIS FUNCTIONALITY
   var regIsLate = function(dateRegistered){
       if(regDate == undefined) return false;
       return dateRegistered>regDate;
   };
-  var regPerKid = function(returning,grade,dateRegistered){
+  */
+  
+  var regPerKid = function(returning, grade){
       var reg = 0;
       if(!returning){ reg += regPerKidNew;}
       else {reg += egPerKidReturn;}
       if(grade == 0){reg -= regKDiscount;}
-      if (regIsLate(dateRegistered)){reg += regLateFee;}
       return reg;
   };
-  var regPerFamily = function(returning, dateRegistered) {
+  var regPerFamily = function(returning) {
           var reg = 0;
           if(!returning){reg += regPerFamNew;}
           else{reg += regPerFamReturn;}
-          if (regIsLate(dateRegistered)){reg += regLateFee;}
           return reg;
     };
-  var registrationSubtotal = function(kids,returning,dateRegistered) {
+  var registrationSubtotal = function(kids,returning) {
       var reg = 0;
       for(var i=0; i < kids.length; i++){
-          reg += regPerKid(returning,kids[0].grade,dateRegistered);
+          reg += regPerKid(returning,kids[0].grade);
       }
-      reg += regPerFamily(returning,dateRegistered);
+      reg += regPerFamily(returning);
       return reg;
   };
     return {
-      regIsLate: regIsLate,
+      //regIsLate: regIsLate,
       regPerKid: regPerKid,
       regPerFamily: regPerFamily,
       registrationSubtotal: registrationSubtotal

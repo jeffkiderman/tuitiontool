@@ -69,6 +69,8 @@ class Kid extends React.Component {
             className="kid-grade"
             onChange={(event) => this.handleChange(event, 'grade')}
             type="number"
+            min = "0"
+            max = "12"
             defaultValue={this.props.grade}/>
         </div>
         <div>
