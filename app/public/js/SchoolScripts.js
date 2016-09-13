@@ -115,7 +115,8 @@ function getBasicInfoProps(d){
                   {id:3, value:"Type: " + type},
                   {id:4, value:"Gender: " + boygirl},
                   {id:5, value:"Grades: " + grades},
-                  {id:6, value:"Tuition Notes: " + tuitionNotes}];
+                  {id:6, value:"Tuition Info From: " + tuitYear},
+                  {id:7, value:"Tuition Notes: " + tuitionNotes}];
       }
     };
 }
