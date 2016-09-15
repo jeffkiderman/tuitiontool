@@ -3,6 +3,7 @@
 
 const Kid = require('./Kid.react');
 const React = require('react');
+const Button = require('react-bootstrap').Button;
 
 import type {KidObject} from './TuitionFlowTypes';
 
@@ -39,11 +40,11 @@ class FamilyInputForm extends React.Component{
       {/* button is yet another react component that closely mirrors the html
         element of the same name.  onClick translates to the
         html button onclick handler, etc */}
-      <button
-        className="add-kid-button"
+      <Button
+        bsStyle="primary"
         onClick={this.props.onNewKid}>
         Add Child
-      </button>
+      </Button>
       <div className="kids-section">
       {/* all of the Kid react elements */}
         {kidsUI}

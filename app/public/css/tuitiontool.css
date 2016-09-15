@@ -23,12 +23,6 @@
   cursor: pointer;
 }
 
-.add-kid-button {
-  background-color: green;
-  height:20px;
-  color: white;
-}
-
 .kids-section {
   margin-top: 10px;
   margin-bottom: 10px;
