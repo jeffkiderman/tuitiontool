@@ -67,11 +67,11 @@ class TuitionSelector extends React.Component {
           compoenents.  it doesnt' care that they're in an array.
         )*/}
         {this.props.schoolData.map(
-          (optionData) =>
-            <option value={optionData.value} key={optionData.value}>
+          (optionData) => optionData.hasData
+            ? <option value={optionData.value} key={optionData.value}>
               {optionData.name}
-              {optionData.hasData ? null : ' *no data*'}
-            </option>
+              </option>
+            : null
         )}
       </select>
     );

@@ -24,9 +24,12 @@ class TuitionScoreCard extends React.Component {
     const info = schoolObj.basicInfo.printSchoolInfo();
     return <div>
       <div>
-      {info.map(function(line){    
-       if(line.id==1) return <p dangerouslySetInnerHTML={{__html: line.value}}></p>; 
-       return <p key={line.id}>{line.value}</p>;
+      {info.map(function(line, i){
+       if(line.id==1) {
+         return <a key={i} href={line.value}>{line.value}</a>;
+       } else {
+       return <p key={line.id}>{line.value}</p>
+      };
       })}
         <TuitionCostTable
             bill={totalTuition}

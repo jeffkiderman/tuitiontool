@@ -93,7 +93,7 @@ function getBasicInfoProps(d){
     const tuitOnline = d[Cols.tuitOnline];
     const tuitYear = d[Cols.tuitYear];
     const schoolNotes = d[Cols.schoolNotes];
-    const tuitionNotes = d[Cols.tuitionNotes];
+    let tuitionNotes = d[Cols.tuitionNotes];
     if(tuitionNotes == ""){tuitionNotes = "N/A"}
     var boygirl = "";
     if(d[Cols.boys] == "Yes" && d[Cols.girls] == "Yes"){
@@ -110,7 +110,8 @@ function getBasicInfoProps(d){
           return false;
       },
       printSchoolInfo: function(){
-          return [{id:1, value:"\u003ca href=\"" + website + "\"\u003e" + website + "\u003c/a \u003e"},
+          return [
+                  {id:1, value:website},
                   {id:2, value:address + ", " + city + ", " + state + ", " + zip},
                   {id:3, value:"Type: " + type},
                   {id:4, value:"Gender: " + boygirl},
@@ -239,7 +240,7 @@ function getRegistrationProps(d) {
       return dateRegistered>regDate;
   };
   */
-  
+
   var regPerKid = function(returning, grade){
       var reg = 0;
       if(!returning){ reg += regPerKidNew;}
