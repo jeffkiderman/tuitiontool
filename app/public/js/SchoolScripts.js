@@ -43,13 +43,13 @@ const SchoolScripts = {
         var discount = school.discount.discountSubtotal(kids);
         total += discount;
 
-        bill = [{id:1, descrip:"Base Tuition", perChild:(base/kids.length).toLocaleString(), perFam:base.toLocaleString()},
-               {id:2, descrip:"Fees", perChild:fees/kids.length, perFam:fees},
-               {id:3, descrip:"Registration Fees", perChild:reg/kids.length, perFam:reg},
-                {id:4, descrip:"Family Commitment", perChild:familyCom/kids.length, perFam:familyCom},
-                {id:5, descrip:"Building & Security Fees/Fund", perChild:build/kids.length, perFam:build},
-                {id:6, descrip:"Discount", perChild:discount/kids.length, perFam:discount},
-                {id:7, descrip:"Total Cost", perChild:total/kids.length, perFam:total}
+        bill = [{id:1, descrip:"Base Tuition", perChild:"$"+(base/kids.length).toLocaleString(), perFam:"$"+base.toLocaleString()},
+               {id:2, descrip:"Fees", perChild:"$"+(fees/kids.length).toLocaleString(), perFam:"$"+fees.toLocaleString()},
+               {id:3, descrip:"Registration Fees", perChild:"$"+(reg/kids.length).toLocaleString(), perFam:"$"+reg.toLocaleString()},
+                {id:4, descrip:"Family Commitment", perChild:"$"+(familyCom/kids.length).toLocaleString(), perFam:"$"+familyCom.toLocaleString()},
+                {id:5, descrip:"Building & Security Fees/Fund", perChild:"$"+(build/kids.length).toLocaleString(), perFam:"$"+build.toLocaleString()},
+                {id:6, descrip:"Discount", perChild:"$"+(discount/kids.length).toLocaleString(), perFam:"$"+discount.toLocaleString()},
+                {id:7, descrip:"Total Cost", perChild:"$"+(total/kids.length).toLocaleString(), perFam:"$"+total.toLocaleString()}
                ];
 
         return bill;

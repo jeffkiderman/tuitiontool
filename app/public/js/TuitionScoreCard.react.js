@@ -26,9 +26,9 @@ class TuitionScoreCard extends React.Component {
       <div>
       {info.map(function(line, i){
        if(line.id==1) {
-         return <a key={i} href={line.value}>{line.value}</a>;
+         return <a key={i} href={line.value}>{line.value}<br /></a>;
        } else {
-       return <p key={line.id}>{line.value}</p>
+       return <span key={line.id}>{line.value}<br /></span>
       };
       })}
         <TuitionCostTable

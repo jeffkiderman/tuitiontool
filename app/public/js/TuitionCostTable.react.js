@@ -3,15 +3,16 @@
 
 const React = require('react');
 const SchoolScripts = require('./SchoolScripts');
+const Table = require('react-bootstrap').Table;
 
 class TuitionCostTable extends React.Component {
     render() {
         var headerComponents = this.generateHeaders();
         var rowComponents = this.generateRows();
-        return <table>
+        return <Table striped bordered condensed hover>
                     <thead><tr>{headerComponents}</tr></thead>
                     <tbody>{rowComponents}</tbody>
-                </table>;
+                </Table>;
     }
 
    generateHeaders() {
@@ -21,7 +22,7 @@ class TuitionCostTable extends React.Component {
          {key:"perFam",label:"Total Cost"}
       ];
       return cols.map(function(colData, index){
-            return <th key={index}>{colData.label}</th>;
+            return <th key={index} className="text-center">{colData.label}</th>;
         });
     }
 
@@ -39,7 +40,7 @@ class TuitionCostTable extends React.Component {
             var cells = cols.map(function(colData, index2){
                 return <td key={'td' + index + '.' + index2}>{item[colData.key]}</td>
             });
-            return <tr key={'tr'+index}>{cells}</tr>;
+            return <tr key={'tr'+index} className="text-center">{cells}</tr>;
         });
     }
 }
