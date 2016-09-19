@@ -32,3 +32,12 @@
   margin-top: 10px;
   margin-bottom: 5px;
 }
+
+.footer-text {
+  bottom: 10px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width: 100%;
+}

@@ -4,6 +4,7 @@
 const Cols = require('./Cols');
 const Kid = require('./Kid.react');
 const FamilyInputForm = require('./FamilyInputForm.react');
+const Footer = require('./Footer.react');
 const React = require('react');
 const TuitionScoreCard = require('./TuitionScoreCard.react');
 const TuitionSelector = require('./TuitionSelector.react');
@@ -176,6 +177,7 @@ class TuitionToolRoot extends React.Component {
         kids={this.state.kids}
         schoolData={currentSchool}
       />
+      <Footer />
     </div>;
   }
 }
