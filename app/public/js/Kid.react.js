@@ -1,6 +1,7 @@
 'use strict'
 //@flow
 
+const LeftRight = require('./LeftRight.react');
 const React = require('react');
 
 import type {KidObject} from './TuitionFlowTypes';
@@ -10,7 +11,11 @@ class Kid extends React.Component {
   props: PropTypes;
 
   handleChange = (event: Object, key: string) => {
-    const value = event.target.value;
+    let value = event.target.value;
+    // HACK because boolean values are stored as strings in html
+    if(key === 'returningToSchool') {
+      value = value === 'true';
+    }
     // make a copy of props (which is a js object of key-value pairs)
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
     let newKidObj = Object.assign({}, this.props);
@@ -28,6 +33,29 @@ class Kid extends React.Component {
   }
 
   render() {
+    const genderButtons = <div>
+        <GenderRadioBtn
+          buttonGender="Male"
+          studentGender={this.props.gender}
+          handleChange={this.handleChange}
+        />
+        {' '}
+        <GenderRadioBtn
+          buttonGender="Female"
+          studentGender={this.props.gender}
+          handleChange={this.handleChange}
+        />
+        </div>
+      const returningButton = <div>
+        <label>
+          <input
+            type="checkbox"
+            onClick={(event) => this.handleChange(event, 'returningToSchool')}
+            value={!this.props.returningToSchool}
+            checked={this.props.returningToSchool}/>
+          Returning?
+        </label>
+      </div>;
     return (
       <div className="kid-root">
         {/* this is where it starts to get real sexy.  click on the X, and
@@ -69,34 +97,32 @@ class Kid extends React.Component {
             className="kid-grade"
             onChange={(event) => this.handleChange(event, 'grade')}
             type="number"
-            min = "0"
-            max = "12"
+            min="0"
+            max="12"
             defaultValue={this.props.grade}/>
         </div>
-        <div>
-          Gender:
-          <label>
-            <input
-              className="kid-gender"
-              onClick={(event) => this.handleChange(event, 'gender')}
-              type="radio"
-              value="Male"
-              checked={this.props.gender === 'Male'}/>
-            Male
-          </label>
-          <label>
-            <input
-              className="kid-gender"
-              onClick={(event) => this.handleChange(event, 'gender')}
-              type="radio"
-              value="Female"
-              checked={this.props.gender === 'Female'}/>
-            Female
-          </label>
-        </div>
+        <LeftRight left={genderButtons} right={returningButton} />
       </div>
     );
   }
+}
+
+const GenderRadioBtn = (props: {
+  buttonGender: string,
+  studentGender: string,
+  handleChange: (event: Object, key: string) => void,
+}) => {
+  return (
+    <label>
+      <input
+        className="kid-gender"
+        onClick={(event) => props.handleChange(event, 'gender')}
+        type="radio"
+        value={props.buttonGender}
+        checked={props.buttonGender === props.studentGender}/>
+      {props.buttonGender}
+    </label>
+  );
 }
 
 module.exports = Kid;

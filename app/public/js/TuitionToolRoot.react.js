@@ -131,7 +131,8 @@ class TuitionToolRoot extends React.Component {
       name: '',
       gender: '',
       onKidChange: this.handleKidChange,
-      onKidRemove: this.handleKidRemove
+      onKidRemove: this.handleKidRemove,
+      returningToSchool: false,
     };
 
     // if there was no override, update ID counter
